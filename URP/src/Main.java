@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
 
 public class Main {
 
@@ -11,6 +13,14 @@ public class Main {
         SwingUtilities.invokeLater(() -> {
             로그인페이지();
         });
+        
+        try {
+    		Class.forName("com.mysql.cj.jdbc.Driver");
+    		
+    		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/bankdb", "root", "ssho000805!");
+    		System.out.println("db 연결됨");
+    	}
+    	catch(Exception e){}
     }
 
     private static void 로그인페이지() {
