@@ -17,7 +17,7 @@ public class Main {
         try {
     		Class.forName("com.mysql.cj.jdbc.Driver");
     		
-    		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/bankdb", "root", "ssho000805!");
+    		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db", "root", "root");
     		System.out.println("db 연결됨");
     	}
     	catch(Exception e){}
@@ -49,11 +49,11 @@ public class Main {
                 // 교수 또는 학생 여부 확인
                 if (isProfessor(id, password)) {
                     currentUserRole = "교수";
-                    교수페이지();
+                    ProfessorMain();
                     loginFrame.dispose(); // 로그인 창 닫기
                 } else if (isStudent(id, password)) {
                     currentUserRole = "학생";
-                    학생페이지();
+                    StudentMain();
                     loginFrame.dispose(); // 로그인 창 닫기
                 } else {
                     JOptionPane.showMessageDialog(loginFrame, "잘못된 ID 또는 Password입니다.");
@@ -130,7 +130,6 @@ public class Main {
         signUpFrame.setVisible(true);
     }
 
-   
     
     private static boolean isProfessor(String id, String password) {
         // 교수 계정 확인 로직을 여기에 추가
@@ -142,10 +141,10 @@ public class Main {
         return id.equals("s") && password.equals("s");
     }
 
-    private static void 교수페이지() {
+    private static void ProfessorMain() {
         JFrame professorFrame = new JFrame("교수 페이지");
         professorFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        professorFrame.setSize(600, 400);
+        professorFrame.setSize(400, 300);
         professorFrame.setLayout(new BorderLayout());
 
         JTabbedPane tabbedPane = new JTabbedPane();
@@ -157,10 +156,10 @@ public class Main {
         professorFrame.setVisible(true);
     }
 
-    private static void 학생페이지() {
+    private static void StudentMain() {
         JFrame studentFrame = new JFrame("학생 페이지");
         studentFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        studentFrame.setSize(600, 400);
+        studentFrame.setSize(400, 300);
         studentFrame.setLayout(new BorderLayout());
 
         JTabbedPane tabbedPane = new JTabbedPane();
@@ -175,6 +174,38 @@ public class Main {
         studentFrame.setVisible(true);
     }
 
+    private static void createStudentInquiryPage() {
+        StudentInquiry StudentInquiryPage = new StudentInquiry();
+    }
+    
+    private static void createStudentChangePage() {
+        StudentChange StudentChangePage = new StudentChange();
+    }
+    
+    private static void createStudentTimeTablePage() {
+        StudentTimeTable StudentTimeTablePage = new StudentTimeTable();
+    }
+    
+    private static void createStudentClassRegisterPage() {
+        StudentClassRegister StudentClassRegisterPage = new StudentClassRegister();
+    }
+    
+    private static void createStudentClassCancelPage() {
+        StudentClassCancel StudentClassCancelPage = new StudentClassCancel();
+    }
+    
+    private static void createStudentGrade() {
+    	StudentGrade StudentGradePage = new StudentGrade();
+    }
+    
+    private static void createProfGradeInput() {
+    	ProfGradeInput ProfGradeInputPage = new ProfGradeInput();
+    }
+    
+    private static void createProfGradeChange() {
+    	ProfGradeChange ProfGradeChangePage = new ProfGradeChange();
+    }
+    
     private static JPanel create학적관리2Panel() {
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout());
@@ -182,6 +213,20 @@ public class Main {
         JButton 학적조회Button = new JButton("학적 조회");
         JButton 정보변경Button = new JButton("정보 변경");
 
+        학적조회Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                createStudentInquiryPage();
+            }
+        });
+        
+        정보변경Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                createStudentChangePage();
+            }
+        });
+        
         panel.add(학적조회Button);
         panel.add(정보변경Button);
 
@@ -209,6 +254,20 @@ public class Main {
         JButton 성적입력Button = new JButton("성적 입력");
         JButton 성적수정Button = new JButton("성적 수정");
 
+        성적입력Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	createProfGradeInput();
+            }
+        });
+        
+        성적수정Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	createProfGradeChange();
+            }
+        });
+        
         panel.add(성적입력Button);
         panel.add(성적수정Button);
 
@@ -221,6 +280,13 @@ public class Main {
 
         JButton 성적조회Button = new JButton("성적 조회");
 
+        성적조회Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	createStudentGrade();
+            }
+        });
+        
         panel.add(성적조회Button);
 
         return panel;
@@ -233,6 +299,27 @@ public class Main {
         JButton 수강신청Button = new JButton("수강 신청");
         JButton 수강취소Button = new JButton("수강 취소");
 
+        시간표조회Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	createStudentTimeTablePage();
+            }
+        });
+        
+        수강신청Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	createStudentClassRegisterPage();
+            }
+        });
+        
+        수강취소Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	createStudentClassCancelPage();
+            }
+        });
+        
         panel.add(시간표조회Button);
         panel.add(수강신청Button);
         panel.add(수강취소Button);
