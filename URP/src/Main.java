@@ -17,7 +17,7 @@ public class Main {
         try {
     		Class.forName("com.mysql.cj.jdbc.Driver");
     		
-    		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db", "root", "root");
+    		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/URP", "root", "root");
     		System.out.println("db 연결됨");
     	}
     	catch(Exception e){}
@@ -84,11 +84,8 @@ public class Main {
     private static void 회원가입페이지() {
         JFrame signUpFrame = new JFrame("회원가입");
         signUpFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        signUpFrame.setSize(300, 200);
-        signUpFrame.setLayout(new GridLayout(5, 2));
-
-        JLabel nameLabel = new JLabel("이름:");
-        JTextField nameField = new JTextField();
+        signUpFrame.setSize(400, 300);
+        signUpFrame.setLayout(new GridLayout(6, 2));
 
         JLabel idLabel = new JLabel("ID:");
         JTextField idField = new JTextField();
@@ -96,36 +93,53 @@ public class Main {
         JLabel pwLabel = new JLabel("Password:");
         JPasswordField pwField = new JPasswordField();
 
+        JLabel nameLabel = new JLabel("이름:");
+        JTextField nameField = new JTextField();
+
+        JLabel departmentLabel = new JLabel("학과:");
+        String[] departments = {"학과1", "학과2", "학과3", "학과4"};
+        JComboBox<String> departmentComboBox = new JComboBox<>(departments);
+
+        JLabel birthdayLabel = new JLabel("생일: ('2000-08-05'형식으로 기입)");
+        JTextField birthdayField = new JTextField();
+
         JButton signUpButton = new JButton("회원가입");
+
 
         signUpButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String name = nameField.getText();
+                // 회원가입 버튼이 클릭되었을 때의 로직
                 String id = idField.getText();
                 char[] pwChars = pwField.getPassword();
                 String password = new String(pwChars);
+                String name = nameField.getText();
+                String selectedDepartment = (String) departmentComboBox.getSelectedItem();
+                String birthday = birthdayField.getText();
 
- /*               if (registerUser(name, id, password)) {
-                    JOptionPane.showMessageDialog(signUpFrame, "회원가입이 완료되었습니다.");
-                    signUpFrame.dispose();
-                } else {
-                    JOptionPane.showMessageDialog(signUpFrame, "이미 존재하는 ID입니다. 다른 ID를 사용해주세요.");
-                }
- */
+                // TODO: MySQL 연동 및 회원가입 로직 추가
+
+                // 테스트를 위해 입력된 정보를 콘솔에 출력
+                System.out.println("ID: " + id);
+                System.out.println("Password: " + password);
+                System.out.println("이름: " + name);
+                System.out.println("학과: " + selectedDepartment);
+                System.out.println("생일: " + birthday);
             }
         });
 
-        signUpFrame.add(nameLabel);
-        signUpFrame.add(nameField);
         signUpFrame.add(idLabel);
         signUpFrame.add(idField);
         signUpFrame.add(pwLabel);
         signUpFrame.add(pwField);
-        signUpFrame.add(new JLabel());
+        signUpFrame.add(nameLabel);
+        signUpFrame.add(nameField);
+        signUpFrame.add(departmentLabel);
+        signUpFrame.add(departmentComboBox);
+        signUpFrame.add(birthdayLabel);
+        signUpFrame.add(birthdayField);
+        signUpFrame.add(new JLabel()); // 빈 라벨
         signUpFrame.add(signUpButton);
-        signUpFrame.add(new JLabel());
-        signUpFrame.add(new JLabel());
 
         signUpFrame.setVisible(true);
     }
@@ -174,6 +188,8 @@ public class Main {
         studentFrame.setVisible(true);
     }
 
+    //여기서부터는 버튼마다의 각각 페이지 호출 객체 생성
+    
     private static void createStudentInquiryPage() {
         StudentInquiry StudentInquiryPage = new StudentInquiry();
     }
@@ -194,19 +210,27 @@ public class Main {
         StudentClassCancel StudentClassCancelPage = new StudentClassCancel();
     }
     
-    private static void createStudentGrade() {
+    private static void createStudentGradePage() {
     	StudentGrade StudentGradePage = new StudentGrade();
     }
     
-    private static void createProfGradeInput() {
+    private static void createProfGradeInputPage() {
     	ProfGradeInput ProfGradeInputPage = new ProfGradeInput();
     }
     
-    private static void createProfGradeChange() {
+    private static void createProfGradeChangePage() {
     	ProfGradeChange ProfGradeChangePage = new ProfGradeChange();
     }
     
-    private static JPanel create학적관리2Panel() {
+    private static void createProfClassMakePage() {
+    	ProfClassMake ProfClassMakePage = new ProfClassMake();
+    }
+    
+    private static void createProfClassDeletePage() {
+    	ProfClassDelete ProfClassDeletePage = new ProfClassDelete();
+    }
+    
+    private static JPanel create학적관리2Panel() { // 2 = 학생의 학적관리 패널
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout());
 
@@ -234,13 +258,27 @@ public class Main {
     }
 
     
-    private static JPanel create수업관리1Panel() {
+    private static JPanel create수업관리1Panel() { // 1 = 교수의 수업관리 패널
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout());
 
         JButton 수업생성Button = new JButton("수업 생성");
         JButton 수업삭제Button = new JButton("수업 삭제");
 
+        수업생성Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                createProfClassMakePage();
+            }
+        });
+        
+        수업삭제Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                createProfClassDeletePage();
+            }
+        });
+        
         panel.add(수업생성Button);
         panel.add(수업삭제Button);
 
@@ -257,14 +295,14 @@ public class Main {
         성적입력Button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	createProfGradeInput();
+            	createProfGradeInputPage();
             }
         });
         
         성적수정Button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	createProfGradeChange();
+            	createProfGradeChangePage();
             }
         });
         
@@ -283,7 +321,7 @@ public class Main {
         성적조회Button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	createStudentGrade();
+            	createStudentGradePage();
             }
         });
         
