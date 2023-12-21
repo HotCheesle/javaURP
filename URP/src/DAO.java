@@ -127,6 +127,39 @@ public class DAO {
 			return null;
 		}
 	}
+	public static ResultSet IDduplication(String[] param){ // {id}
+		try	{
+			if(conn != null){
+				Statement stmt = conn.createStatement();
+				String proc = "call IDduplication";
+				proc += ParamToString(param);
+				ResultSet rs = stmt.executeQuery(proc);
+				return rs;
+			}
+			else{
+				return null;
+			}
+		}
+		catch(Exception e){}
+			return null;
+	}
+	public static ResultSet GetStudent(int sid){ // {SID}
+		try	{
+			if(conn != null){
+				Statement stmt = conn.createStatement();
+				String proc = "call GetStudent";
+				String pa = "(" + sid + ")";
+				proc += pa;
+				ResultSet rs = stmt.executeQuery(proc);
+				return rs;
+			}
+			else{
+				return null;
+			}
+		}
+		catch(Exception e){}
+			return null;
+	}
 	
 	
 }
