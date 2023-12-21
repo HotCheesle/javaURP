@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 
 public class Main {
 
@@ -15,10 +16,7 @@ public class Main {
         });
         
         try {
-    		Class.forName("com.mysql.cj.jdbc.Driver");
-    		
-    		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/URP", "root", "root");
-    		System.out.println("db 연결됨");
+    		DAO.SetConnection("urp", "root", "ssho000805!");//여기에 비밀번호와 데이터베이스 이름 입력
     	}
     	catch(Exception e){}
     }
@@ -45,9 +43,10 @@ public class Main {
                 String id = idField.getText();
                 char[] pwChars = pwField.getPassword();
                 String password = new String(pwChars);
+                String[] login = {"'" + id + "'", "'" + password + "'"};
 
                 // 교수 또는 학생 여부 확인
-                if (isProfessor(id, password)) {
+                /*if (isProfessor(id, password)) {
                     currentUserRole = "교수";
                     ProfessorMain();
                     loginFrame.dispose(); // 로그인 창 닫기
@@ -57,7 +56,25 @@ public class Main {
                     loginFrame.dispose(); // 로그인 창 닫기
                 } else {
                     JOptionPane.showMessageDialog(loginFrame, "잘못된 ID 또는 Password입니다.");
+                }*/
+                
+                ResultSet rss = DAO.StudentLogin(login);
+                ResultSet rsp = DAO.ProfessorLogin(login);
+                try {
+                if (rss.next()) {
+                	currentUserRole = "학생";
+                    StudentMain();
+                    loginFrame.dispose();
                 }
+                else if (rsp.next()) {
+                	currentUserRole = "교수";
+                    ProfessorMain();
+                    loginFrame.dispose();
+                }
+                else {
+                	JOptionPane.showMessageDialog(loginFrame, "잘못된 ID 또는 Password입니다.");
+                }
+                } catch (Exception ex) {}
             }
         });
 

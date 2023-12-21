@@ -8,9 +8,9 @@ import java.sql.SQLException;
 
 public class StudentInquiry extends JFrame {
 
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/URP";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/urp";
     private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "root";
+    private static final String DB_PASSWORD = "ssho000805!";
 
     public StudentInquiry() {
         super("학적 조회 페이지");
