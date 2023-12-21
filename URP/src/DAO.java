@@ -1,8 +1,12 @@
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DAO {
 	public final static String MYSQL = "com.mysql.cj.jdbc.Driver";
@@ -106,8 +110,7 @@ public class DAO {
 			return null;
 		}
 	}
-	public static ResultSet SignUp(String sname, String id, String pw, 
-			int departmentid, String birthdate, int advisorid){ 
+	public static ResultSet SignUp(String sname, String id, String pw, int departmentid, String birthdate, int advisorid){ 
 		try	{
 			if(conn != null){
 				Statement stmt = conn.createStatement();
@@ -127,6 +130,22 @@ public class DAO {
 			return null;
 		}
 	}
-	
-	
+    public static ResultSet GetStudentInfoBySID(int studentId) {
+        try {
+            if (conn != null) {
+                CallableStatement stmt = conn.prepareCall("{call GetStudentInfoBySID(?)}");
+                stmt.setInt(1, studentId);
+                ResultSet rs = stmt.executeQuery();
+                return rs;
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
+
+
+
