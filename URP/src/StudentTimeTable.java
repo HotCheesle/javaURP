@@ -35,7 +35,7 @@ public class StudentTimeTable extends JFrame {
         tableModel.setColumnIdentifiers(columnNames);
 
         try {
-            DAO.SetConnection("urp", "root", "root");
+            //DAO.SetConnection("urp", "root", "root");
 
             // SID에 해당하는 학생이 수강 중인 과목을 찾습니다.
             String listeningClassQuery = "SELECT CID FROM listeningclass WHERE SID = ?";

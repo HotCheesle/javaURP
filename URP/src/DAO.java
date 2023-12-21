@@ -111,7 +111,7 @@ public class DAO {
 		try	{
 			if(conn != null){
 				Statement stmt = conn.createStatement();
-				String proc = "call GetAdvisorID";
+				String proc = "call SignUp";
 				String pa = "('" + sname + "','" + id + "','" + pw + "'," + departmentid
 						+ ",'" + birthdate + "'," + advisorid + ")";
 				proc += pa;

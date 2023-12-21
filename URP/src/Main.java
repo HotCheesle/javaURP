@@ -18,7 +18,7 @@ public class Main {
         });
         
         try {
-    		DAO.SetConnection("urp", "root", "root");//여기에 비밀번호와 데이터베이스 이름 입력
+    		DAO.SetConnection("urp", "root", "ssho000805!");//여기에 비밀번호와 데이터베이스 이름 입력
     	}
     	catch(Exception e){}
     }
@@ -106,7 +106,7 @@ public class Main {
         JTextField nameField = new JTextField();
 
         JLabel departmentLabel = new JLabel("학과:");
-        String[] departments = {"학과1", "학과2", "학과3", "학과4"};
+        String[] departments = {"기계공학과", "컴퓨터공학과", "물리학과", "수학과"};
         JComboBox<String> departmentComboBox = new JComboBox<>(departments);
 
         JLabel birthdayLabel = new JLabel("생일: ('2000-08-05'형식으로 기입)");
@@ -150,6 +150,8 @@ public class Main {
                 }
                 else {
                 	DAO.SignUp(name, id, password, dpid, birthday, adid);
+                	JOptionPane.showMessageDialog(signUpFrame, "회원가입이 완료되었습니다.");
+                	signUpFrame.dispose();
                 }
                 
 
