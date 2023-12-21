@@ -1,22 +1,19 @@
 import javax.swing.*;
 import java.awt.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class StudentInquiry extends JFrame {
 
-    private String studentId; // SID 저장 변수 추가
+    private int studentId;
 
-    public StudentInquiry(String studentId) {
+    public StudentInquiry(int studentId) {
         super("학적 조회 페이지");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(400, 300);
         setLayout(new BorderLayout());
 
-        this.studentId = studentId; // SID 설정
+        this.studentId = studentId;
 
         // 학적 조회 페이지에 필요한 컴포넌트 및 로직을 추가합니다.
         displayStudentInfo();
@@ -29,16 +26,9 @@ public class StudentInquiry extends JFrame {
         panel.setLayout(new GridLayout(6, 2));
 
         try {
-        	Connection connection = DAO.SetConnection("urp", "root", "root");
+            ResultSet resultSet = DAO.GetStudent(studentId);
 
-            // SID에 해당하는 학생 정보만을 조회하도록 수정
-            String query = "SELECT sname, departmentid, status, birthdate, advisorid, grade FROM students WHERE SID = ?";
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, studentId); // SID 설정
-
-            ResultSet resultSet = statement.executeQuery();
-
-            if (resultSet.next()) {
+            if (resultSet != null && resultSet.next()) {
                 String name = resultSet.getString("sname");
                 String department = resultSet.getString("departmentid");
                 String enrollmentStatus = resultSet.getString("status");
@@ -62,9 +52,9 @@ public class StudentInquiry extends JFrame {
                 panel.add(gradeLabel);
             }
 
-            resultSet.close();
-            statement.close();
-            connection.close();
+            if (resultSet != null) {
+                resultSet.close();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             // TODO: 에러 처리 로직을 추가할 수 있습니다.
@@ -77,7 +67,7 @@ public class StudentInquiry extends JFrame {
         SwingUtilities.invokeLater(() -> {
             // 여기서는 예시로 "123"이라는 SID로 StudentInquiry를 호출하고 있습니다.
             // 로그인 시 사용자의 SID를 전달받아야 합니다.
-            new StudentInquiry("123");
+            new StudentInquiry(123);
         });
     }
 }

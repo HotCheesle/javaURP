@@ -1,109 +1,74 @@
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.Vector;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StudentGrade extends JFrame {
 
-    private JTable gradeTable;
+    private String studentId; // SID 저장 변수 추가
+    private DefaultListModel<String> gradeListModel;
 
-    public StudentGrade() {
+    public StudentGrade(String studentId) {
         super("성적 조회 페이지");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(600, 400);
+        setSize(400, 300);
         setLayout(new BorderLayout());
 
-        // 페이지에 필요한 컴포넌트 초기화
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(3, 2));
+        this.studentId = studentId; // SID 설정
+        this.gradeListModel = new DefaultListModel<>();
 
-        JLabel studentIdLabel = new JLabel("학생 ID:");
-        JTextField studentIdField = new JTextField();
-
-        JButton searchButton = new JButton("성적 조회");
-
-        // 성적 조회 버튼의 ActionListener
-        searchButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String studentId = studentIdField.getText();
-
-                // TODO: 실제 데이터베이스에서 성적 조회 로직을 구현하고, 결과를 테이블에 표시
-
-                retrieveStudentGrades(studentId);
-            }
-        });
-
-        // 테이블 초기화
-        gradeTable = new JTable();
-
-        // 테이블을 담을 패널 초기화
-        JScrollPane scrollPane = new JScrollPane(gradeTable);
-
-        // 패널에 컴포넌트 추가
-        panel.add(studentIdLabel);
-        panel.add(studentIdField);
-        panel.add(new JLabel()); // 빈 라벨
-        panel.add(new JLabel()); // 빈 라벨
-        panel.add(new JLabel()); // 빈 라벨
-        panel.add(searchButton);
-
-        // 프레임에 패널과 테이블을 추가
-        add(panel, BorderLayout.NORTH);
-        add(scrollPane, BorderLayout.CENTER);
+        // 성적 조회 페이지에 필요한 컴포넌트 및 로직을 추가합니다.
+        displayStudentGrade();
 
         setVisible(true);
     }
 
-    // MySQL을 사용하여 학생의 성적 조회
-    private void retrieveStudentGrades(String studentId) {
+    private void displayStudentGrade() {
+        JList<String> gradeList = new JList<>(gradeListModel);
+        JScrollPane scrollPane = new JScrollPane(gradeList);
+
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/urp", "root", "root");
+            DAO.SetConnection("urp", "root", "root");
 
-            String query = "SELECT * FROM listeningclass WHERE SID = ?";
-            PreparedStatement pstmt = conn.prepareStatement(query);
-            pstmt.setString(1, studentId);
+            // SID에 해당하는 학생이 듣고 있는 강의 정보 조회
+            String query = "SELECT class.classname, listeningclass.score FROM listeningclass " +
+                           "JOIN class ON listeningclass.CID = class.CID WHERE SID = ?";
+            PreparedStatement statement = DAO.conn.prepareStatement(query);
+            statement.setString(1, studentId); // SID 설정
 
-            ResultSet rs = pstmt.executeQuery();
+            ResultSet resultSet = statement.executeQuery();
 
-            // ResultSet의 데이터를 Vector<Vector<Object>>로 변환하여 JTable에 표시
-            Vector<Vector<Object>> data = new Vector<>();
-            while (rs.next()) {
-                Vector<Object> row = new Vector<>();
-                row.add(rs.getString("SID"));
-                row.add(rs.getString("CID"));
-                row.add(rs.getString("score"));
-                data.add(row);
+            List<String> grades = new ArrayList<>();
+            while (resultSet.next()) {
+                String courseName = resultSet.getString("classname"); // 강의 코드 대신 과목 명 사용
+                int score = resultSet.getInt("score");
+                String gradeInfo = "과목 명: " + courseName + " - 성적: " + score; // 수정된 부분
+                grades.add(gradeInfo);
             }
 
-            // 테이블 모델 생성 및 데이터 설정
-            Vector<String> columnNames = new Vector<>();
-            columnNames.add("학생 ID");
-            columnNames.add("강의 ID");
-            columnNames.add("성적");
+            resultSet.close();
+            statement.close();
 
-            DefaultTableModel model = new DefaultTableModel(data, columnNames);
-            gradeTable.setModel(model);
-
-            rs.close();
-            pstmt.close();
-            conn.close();
-        } catch (Exception e) {
+            // JList에 성적 정보 추가
+            for (String grade : grades) {
+                gradeListModel.addElement(grade);
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
+            // TODO: 에러 처리 로직을 추가할 수 있습니다.
         }
+
+        add(scrollPane, BorderLayout.CENTER);
     }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new StudentGrade();
+            // 여기서는 예시로 "s123"이라는 SID로 StudentGrade를 호출하고 있습니다.
+            // 로그인 시 사용자의 SID를 전달받아야 합니다.
+            new StudentGrade("s123");
         });
     }
 }

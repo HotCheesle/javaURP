@@ -8,10 +8,10 @@ import java.util.Vector;
 
 public class StudentTimeTable extends JFrame {
 
-    private String studentId; // SID 저장 변수 추가
+    private int studentId; // SID 저장 변수 추가
     private JTable timeTable;
 
-    public StudentTimeTable(String studentId) {
+    public StudentTimeTable(int studentId) {
         super("수강 과목 조회 페이지");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(800, 600);
@@ -40,7 +40,7 @@ public class StudentTimeTable extends JFrame {
             // SID에 해당하는 학생이 수강 중인 과목을 찾습니다.
             String listeningClassQuery = "SELECT CID FROM listeningclass WHERE SID = ?";
             PreparedStatement listeningClassStatement = DAO.conn.prepareStatement(listeningClassQuery);
-            listeningClassStatement.setString(1, studentId);
+            listeningClassStatement.setInt(1, studentId);
 
             ResultSet listeningClassResultSet = listeningClassStatement.executeQuery();
 
@@ -94,7 +94,7 @@ public class StudentTimeTable extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new StudentTimeTable("123"); // 예시로 "123"이라는 SID를 사용
+            new StudentTimeTable(123); // 예시로 "123"이라는 SID를 사용
         });
     }
 }
