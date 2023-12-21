@@ -5,10 +5,12 @@ import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.Statement;
 
 public class Main {
 
     private static String currentUserRole;
+    private static String currentUserId;
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
@@ -16,7 +18,7 @@ public class Main {
         });
         
         try {
-    		DAO.SetConnection("urp", "root", "ssho000805!");//여기에 비밀번호와 데이터베이스 이름 입력
+    		DAO.SetConnection("urp", "root", "root");//여기에 비밀번호와 데이터베이스 이름 입력
     	}
     	catch(Exception e){}
     }
@@ -24,8 +26,8 @@ public class Main {
     private static void 로그인페이지() {
         JFrame loginFrame = new JFrame("URP 로그인");
         loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        loginFrame.setSize(300, 200);  // 조금 더 높이 조절
-        loginFrame.setLayout(new GridLayout(4, 2));  // 행 추가
+        loginFrame.setSize(300, 200);
+        loginFrame.setLayout(new GridLayout(4, 2));
 
         JLabel idLabel = new JLabel("ID:");
         JTextField idField = new JTextField();
@@ -34,9 +36,8 @@ public class Main {
         JPasswordField pwField = new JPasswordField();
 
         JButton loginButton = new JButton("로그인");
-        JButton signUpButton = new JButton("회원가입");  // 회원가입 버튼 추가
+        JButton signUpButton = new JButton("회원가입");
 
-        // 로그인 버튼의 ActionListener
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -45,39 +46,30 @@ public class Main {
                 String password = new String(pwChars);
                 String[] login = {"'" + id + "'", "'" + password + "'"};
 
-                // 교수 또는 학생 여부 확인
-                /*if (isProfessor(id, password)) {
-                    currentUserRole = "교수";
-                    ProfessorMain();
-                    loginFrame.dispose(); // 로그인 창 닫기
-                } else if (isStudent(id, password)) {
-                    currentUserRole = "학생";
-                    StudentMain();
-                    loginFrame.dispose(); // 로그인 창 닫기
-                } else {
-                    JOptionPane.showMessageDialog(loginFrame, "잘못된 ID 또는 Password입니다.");
-                }*/
-                
                 ResultSet rss = DAO.StudentLogin(login);
                 ResultSet rsp = DAO.ProfessorLogin(login);
                 try {
-                if (rss.next()) {
-                	currentUserRole = "학생";
-                    StudentMain();
-                    loginFrame.dispose();
+                    if (rss.next()) {
+                        currentUserRole = "학생";
+                        currentUserId = rss.getString("SID");
+                        StudentMain();
+                        loginFrame.dispose();
+                    } else if (rsp.next()) {
+                        currentUserRole = "교수";
+                        currentUserId = rsp.getString("PID");
+                        ProfessorMain();
+                        loginFrame.dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(loginFrame, "잘못된 ID 또는 Password입니다.");
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
-                else if (rsp.next()) {
-                	currentUserRole = "교수";
-                    ProfessorMain();
-                    loginFrame.dispose();
-                }
-                else {
-                	JOptionPane.showMessageDialog(loginFrame, "잘못된 ID 또는 Password입니다.");
-                }
-                } catch (Exception ex) {}
             }
         });
 
+        
+        
         // 회원가입 버튼의 ActionListener
         signUpButton.addActionListener(new ActionListener() {
             @Override
@@ -187,7 +179,7 @@ public class Main {
     }
 
     
-    private static boolean isProfessor(String id, String password) {
+/*    private static boolean isProfessor(String id, String password) {
         // 교수 계정 확인 로직을 여기에 추가
         return id.equals("p") && password.equals("p");
     }
@@ -195,14 +187,14 @@ public class Main {
     private static boolean isStudent(String id, String password) {
         // 학생 계정 확인 로직을 여기에 추가
         return id.equals("s") && password.equals("s");
-    }
+    } */
 
     private static void ProfessorMain() {
         JFrame professorFrame = new JFrame("교수 페이지");
         professorFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         professorFrame.setSize(400, 300);
         professorFrame.setLayout(new BorderLayout());
-
+        
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.addTab("수업관리", create수업관리1Panel());
         tabbedPane.addTab("성적관리", create성적관리1Panel());
@@ -217,7 +209,7 @@ public class Main {
         studentFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         studentFrame.setSize(400, 300);
         studentFrame.setLayout(new BorderLayout());
-
+        
         JTabbedPane tabbedPane = new JTabbedPane();
         // 학생 페이지에 필요한 탭 추가
         tabbedPane.addTab("학적관리", create학적관리2Panel());
@@ -230,18 +222,20 @@ public class Main {
         studentFrame.setVisible(true);
     }
 
+
+    
     //여기서부터는 버튼마다의 각각 페이지 호출 객체 생성
     
     private static void createStudentInquiryPage() {
-        StudentInquiry StudentInquiryPage = new StudentInquiry();
+        StudentInquiry StudentInquiryPage = new StudentInquiry(currentUserId);
     }
     
     private static void createStudentChangePage() {
-        StudentChange StudentChangePage = new StudentChange();
+        StudentChange StudentChangePage = new StudentChange(currentUserId);
     }
     
     private static void createStudentTimeTablePage() {
-        StudentTimeTable StudentTimeTablePage = new StudentTimeTable();
+        StudentTimeTable StudentTimeTablePage = new StudentTimeTable(currentUserId);
     }
     
     private static void createStudentClassRegisterPage() {

@@ -8,15 +8,15 @@ import java.sql.SQLException;
 
 public class StudentInquiry extends JFrame {
 
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/urp";
-    private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "ssho000805!";
+    private String studentId; // SID 저장 변수 추가
 
-    public StudentInquiry() {
+    public StudentInquiry(String studentId) {
         super("학적 조회 페이지");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(400, 300);
         setLayout(new BorderLayout());
+
+        this.studentId = studentId; // SID 설정
 
         // 학적 조회 페이지에 필요한 컴포넌트 및 로직을 추가합니다.
         displayStudentInfo();
@@ -29,13 +29,16 @@ public class StudentInquiry extends JFrame {
         panel.setLayout(new GridLayout(6, 2));
 
         try {
-            Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             String query = "SELECT sname, departmentid, status, birthdate, advisorid, grade FROM students"; // 학적테이블은 실제 테이블 이름으로 변경해야 합니다.
+        	Connection connection = DAO.SetConnection("urp", "root", "root");
 
+            // SID에 해당하는 학생 정보만을 조회하도록 수정
+            String query = "SELECT sname, departmentid, status, birthdate, advisorid, grade FROM students WHERE SID = ?";
             PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, studentId); // SID 설정
+
             ResultSet resultSet = statement.executeQuery();
 
-            while (resultSet.next()) {
+            if (resultSet.next()) {
                 String name = resultSet.getString("sname");
                 String department = resultSet.getString("departmentid");
                 String enrollmentStatus = resultSet.getString("status");
@@ -72,7 +75,9 @@ public class StudentInquiry extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new StudentInquiry();
+            // 여기서는 예시로 "123"이라는 SID로 StudentInquiry를 호출하고 있습니다.
+            // 로그인 시 사용자의 SID를 전달받아야 합니다.
+            new StudentInquiry("123");
         });
     }
 }
