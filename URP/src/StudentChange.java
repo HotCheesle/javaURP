@@ -16,8 +16,7 @@ public class StudentChange extends JFrame {
     private JTextField birthdateField;
     private JTextField idField;
 
-
-    public StudentChange(int studentId) {
+    public StudentChange(int currentUserId) {
         super("정보 변경 페이지");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(400, 400);
@@ -28,7 +27,7 @@ public class StudentChange extends JFrame {
         birthdateField = new JTextField();
         
         try {
-        	ResultSet rss = DAO.GetStudent(studentId);
+        	ResultSet rss = DAO.GetStudent(currentUserId);
         	
         } catch(Exception ex) {}
 
@@ -36,7 +35,7 @@ public class StudentChange extends JFrame {
         updateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                updateStudentInfo(currentUserId);
             }
         });
 
