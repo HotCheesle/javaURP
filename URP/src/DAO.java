@@ -72,7 +72,6 @@ public class DAO {
 			return null;
 		}
 	}
-<<<<<<< HEAD
 	public static ResultSet GetDepartmentID(String[] param){ // {department}
 		try	{
 			if(conn != null){
@@ -86,18 +85,8 @@ public class DAO {
 				return null;
 			}
 		}
-		catch(Exception e){
-=======
-	
-	
-	
-	public static String ParamToString(String[] param)
-	{
-		if (param == null)
-		{
->>>>>>> branch 'asd' of https://github.com/HotCheesle/javaURP.git
+		catch(Exception e){}
 			return null;
-		}
 	}
 	public static ResultSet GetAdvisorID(int param){ // {departmentid}
 		try	{
