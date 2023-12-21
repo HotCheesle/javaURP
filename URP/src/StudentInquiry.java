@@ -26,7 +26,7 @@ public class StudentInquiry extends JFrame {
         panel.setLayout(new GridLayout(6, 2));
 
         try {
-            ResultSet resultSet = DAO.GetStudentInfoBySID(studentId);
+            ResultSet resultSet = DAO.GetStudent(studentId);
 
             if (resultSet != null && resultSet.next()) {
                 String name = resultSet.getString("sname");

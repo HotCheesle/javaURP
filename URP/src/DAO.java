@@ -130,21 +130,40 @@ public class DAO {
 			return null;
 		}
 	}
-    public static ResultSet GetStudentInfoBySID(int studentId) {
-        try {
-            if (conn != null) {
-                CallableStatement stmt = conn.prepareCall("{call GetStudentInfoBySID(?)}");
-                stmt.setInt(1, studentId);
-                ResultSet rs = stmt.executeQuery();
-                return rs;
-            } else {
-                return null;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+	public static ResultSet IDduplication(String[] param){ // {id}
+		try	{
+			if(conn != null){
+				Statement stmt = conn.createStatement();
+				String proc = "call IDduplication";
+				proc += ParamToString(param);
+				ResultSet rs = stmt.executeQuery(proc);
+				return rs;
+			}
+			else{
+				return null;
+			}
+		}
+		catch(Exception e){}
+			return null;
+	}
+	public static ResultSet GetStudent(int sid){ // {SID}
+		try	{
+			if(conn != null){
+				Statement stmt = conn.createStatement();
+				String proc = "call GetStudent";
+				String pa = "(" + sid + ")";
+				proc += pa;
+				ResultSet rs = stmt.executeQuery(proc);
+				return rs;
+			}
+			else{
+				return null;
+			}
+		}
+		catch(Exception e){}
+			return null;
+	}
+	
 }
 
 

@@ -128,39 +128,46 @@ public class Main {
                 String[] dpt = {"'" + selectedDepartment + "'"};
                 int dpid = 0, adid = 0;
                 try {
-                	ResultSet rsdpid = DAO.GetDepartmentID(dpt);
-                	if (rsdpid.next()) {
-                		dpid = rsdpid.getInt("DPID");
+                	String[] eid = {"'" + id + "'"};
+                	ResultSet rsdupleid = DAO.IDduplication(eid);
+                	if(rsdupleid.next()) {
+                		JOptionPane.showMessageDialog(signUpFrame, "아이디가 중복되었습니다. 다른아이디를 입력헤주세요.");
+                	} else {
+                		try {
+                			ResultSet rsdpid = DAO.GetDepartmentID(dpt);
+                			if (rsdpid.next()) {
+                				dpid = rsdpid.getInt("DPID");
+                			}
+                			else {
+                				JOptionPane.showMessageDialog(signUpFrame, "잘못된 학과명입니다.");
+                			}
+                		}catch(Exception ex) {}
+                		try {
+                			ResultSet rsadPID = DAO.GetAdvisorID(dpid);
+                			if(rsadPID.next()) {
+                				adid = rsadPID.getInt("PID");
+                			}
+                			else {
+                				JOptionPane.showMessageDialog(signUpFrame, "해당 학과의 교수를 찾을수 없습니다.");
+                			}
+                		}catch (Exception ex) {}
+                		if(dpid == 0 || adid == 0) {
+                			JOptionPane.showMessageDialog(signUpFrame, "오류가 발생하였습니다.");
+                		}
+                		else {
+                			DAO.SignUp(name, id, password, dpid, birthday, adid);
+                			JOptionPane.showMessageDialog(signUpFrame, "회원가입이 완료되었습니다.");
+                			signUpFrame.dispose();
+                		}
                 	}
-                	else {
-                		JOptionPane.showMessageDialog(signUpFrame, "잘못된 학과명입니다.");
-                	}
-                }catch(Exception ex) {}
-                try {
-                	ResultSet rsadPID = DAO.GetAdvisorID(dpid);
-                	if(rsadPID.next()) {
-                		adid = rsadPID.getInt("PID");
-                	}
-                	else {
-                		JOptionPane.showMessageDialog(signUpFrame, "해당 학과의 교수를 찾을수 없습니다.");
-                	}
-                }catch (Exception ex) {}
-                if(dpid == 0 || adid == 0) {
-                	JOptionPane.showMessageDialog(signUpFrame, "오류가 발생하였습니다.");
-                }
-                else {
-                	DAO.SignUp(name, id, password, dpid, birthday, adid);
-                	JOptionPane.showMessageDialog(signUpFrame, "회원가입이 완료되었습니다.");
-                	signUpFrame.dispose();
-                }
-                
+                } catch (Exception ex) {System.out.println("익셉션");}
 
                 // 테스트를 위해 입력된 정보를 콘솔에 출력
-                System.out.println("ID: " + id);
-                System.out.println("Password: " + password);
-                System.out.println("이름: " + name);
-                System.out.println("학과: " + selectedDepartment);
-                System.out.println("생일: " + birthday);
+                //System.out.println("ID: " + id);
+                //System.out.println("Password: " + password);
+                //System.out.println("이름: " + name);
+                //System.out.println("학과: " + selectedDepartment);
+                //System.out.println("생일: " + birthday);
             }
         });
 
@@ -229,7 +236,7 @@ public class Main {
     //여기서부터는 버튼마다의 각각 페이지 호출 객체 생성
     
     private static void createStudentInquiryPage() {
-        StudentInquiry StudentInquiryPage = new StudentInquiry(currentUserId);
+        //StudentInquiry StudentInquiryPage = new StudentInquiry(currentUserId);
     }
     
     private static void createStudentChangePage() {
@@ -237,19 +244,19 @@ public class Main {
     }
     
     private static void createStudentTimeTablePage() {
-        StudentTimeTable StudentTimeTablePage = new StudentTimeTable(currentUserId);
+        //StudentTimeTable StudentTimeTablePage = new StudentTimeTable(currentUserId);
     }
     
     private static void createStudentClassRegisterPage() {
-        StudentClassRegister StudentClassRegisterPage = new StudentClassRegister(currentUserId);
+        //StudentClassRegister StudentClassRegisterPage = new StudentClassRegister(currentUserId);
     }
     
     private static void createStudentClassCancelPage() {
-        StudentClassCancel StudentClassCancelPage = new StudentClassCancel(currentUserId);
+        //StudentClassCancel StudentClassCancelPage = new StudentClassCancel(currentUserId);
     }
     
     private static void createStudentGradePage() {
-    	StudentGrade StudentGradePage = new StudentGrade(currentUserId);
+    	//StudentGrade StudentGradePage = new StudentGrade(currentUserId);
     }
     
     private static void createProfGradeInputPage() {
