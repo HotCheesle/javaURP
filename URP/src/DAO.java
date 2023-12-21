@@ -20,13 +20,28 @@ public class DAO {
 			e.printStackTrace();
 		}
 	}
+	public static String ParamToString(String[] param)
+	{
+		if (param == null)
+		{
+			return null;
+		}
+		
+		String proc = "";
+		proc += "(";
+		for(int i=0; i<param.length; i++){
+			if(i!=0) proc+=",";
+			proc += param[i];
+		}	
+		proc += ");";
+		return proc;
+	}
 	public static ResultSet StudentLogin(String[] param){ // {id, pw}
 		try	{
 			if(conn != null){
 				Statement stmt = conn.createStatement();
 				String proc = "call StudentLogin";
 				proc += ParamToString(param);
-				System.out.println(proc);
 				ResultSet rs = stmt.executeQuery(proc);
 				
 				return rs;
@@ -45,7 +60,6 @@ public class DAO {
 				Statement stmt = conn.createStatement();
 				String proc = "call ProfessorLogin";
 				proc += ParamToString(param);
-				System.out.println(proc);
 				ResultSet rs = stmt.executeQuery(proc);
 				return rs;
 			}
@@ -57,21 +71,61 @@ public class DAO {
 			return null;
 		}
 	}
-	public static String ParamToString(String[] param)
-	{
-		if (param == null)
-		{
+	public static ResultSet GetDepartmentID(String[] param){ // {department}
+		try	{
+			if(conn != null){
+				Statement stmt = conn.createStatement();
+				String proc = "call GetDepartmentID";
+				proc += ParamToString(param);
+				ResultSet rs = stmt.executeQuery(proc);
+				return rs;
+			}
+			else{
+				return null;
+			}
+		}
+		catch(Exception e){
 			return null;
 		}
-		
-		String proc = "";
-		proc += "(";
-		for(int i=0; i<param.length; i++){
-			if(i!=0) proc+=",";
-			proc += param[i];
-		}	
-		proc += ");";
-		return proc;
+	}
+	public static ResultSet GetAdvisorID(int param){ // {departmentid}
+		try	{
+			if(conn != null){
+				Statement stmt = conn.createStatement();
+				String proc = "call GetAdvisorID";
+				String pa = "(" + param + ")";
+				proc += pa;
+				ResultSet rs = stmt.executeQuery(proc);
+				return rs;
+			}
+			else{
+				return null;
+			}
+		}
+		catch(Exception e){
+			return null;
+		}
+	}
+	public static ResultSet SignUp(String sname, String id, String pw, 
+			int departmentid, String birthdate, int advisorid){ 
+		try	{
+			if(conn != null){
+				Statement stmt = conn.createStatement();
+				String proc = "call GetAdvisorID";
+				String pa = "('" + sname + "','" + id + "','" + pw + "'," + departmentid
+						+ ",'" + birthdate + "'," + advisorid + ")";
+				proc += pa;
+				System.out.println(proc); // testcode
+				ResultSet rs = stmt.executeQuery(proc);
+				return rs;
+			}
+			else{
+				return null;
+			}
+		}
+		catch(Exception e){
+			return null;
+		}
 	}
 	
 	

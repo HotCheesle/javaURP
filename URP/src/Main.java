@@ -133,8 +133,33 @@ public class Main {
                 String name = nameField.getText();
                 String selectedDepartment = (String) departmentComboBox.getSelectedItem();
                 String birthday = birthdayField.getText();
-
-                // TODO: MySQL 연동 및 회원가입 로직 추가
+                String[] dpt = {"'" + selectedDepartment + "'"};
+                int dpid = 0, adid = 0;
+                try {
+                	ResultSet rsdpid = DAO.GetDepartmentID(dpt);
+                	if (rsdpid.next()) {
+                		dpid = rsdpid.getInt("DPID");
+                	}
+                	else {
+                		JOptionPane.showMessageDialog(signUpFrame, "잘못된 학과명입니다.");
+                	}
+                }catch(Exception ex) {}
+                try {
+                	ResultSet rsadPID = DAO.GetAdvisorID(dpid);
+                	if(rsadPID.next()) {
+                		adid = rsadPID.getInt("PID");
+                	}
+                	else {
+                		JOptionPane.showMessageDialog(signUpFrame, "해당 학과의 교수를 찾을수 없습니다.");
+                	}
+                }catch (Exception ex) {}
+                if(dpid == 0 || adid == 0) {
+                	JOptionPane.showMessageDialog(signUpFrame, "오류가 발생하였습니다.");
+                }
+                else {
+                	DAO.SignUp(name, id, password, dpid, birthday, adid);
+                }
+                
 
                 // 테스트를 위해 입력된 정보를 콘솔에 출력
                 System.out.println("ID: " + id);
