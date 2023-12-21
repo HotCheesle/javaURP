@@ -1,129 +1,100 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Vector;
 
 public class StudentTimeTable extends JFrame {
 
+    private String studentId; // SID 저장 변수 추가
     private JTable timeTable;
 
-    public StudentTimeTable() {
-        super("시간표 조회 페이지");
+    public StudentTimeTable(String studentId) {
+        super("수강 과목 조회 페이지");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(600, 400);
+        setSize(800, 600);
         setLayout(new BorderLayout());
 
-        // 페이지에 필요한 컴포넌트 초기화
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(3, 2));
+        this.studentId = studentId; // SID 설정
 
-        JLabel studentIdLabel = new JLabel("학생 ID:");
-        JTextField studentIdField = new JTextField();
-
-        JButton searchButton = new JButton("시간표 조회");
-
-        // 시간표 조회 버튼의 ActionListener
-        searchButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String studentId = studentIdField.getText();
-
-                // TODO: 실제 데이터베이스에서 시간표 조회 로직을 구현하고, 결과를 테이블에 표시
-
-                retrieveStudentTimeTable(studentId);
-            }
-        });
-
-        // 테이블 초기화
-        timeTable = new JTable();
-
-        // 테이블을 담을 패널 초기화
-        JScrollPane scrollPane = new JScrollPane(timeTable);
-
-        // 패널에 컴포넌트 추가
-        panel.add(studentIdLabel);
-        panel.add(studentIdField);
-        panel.add(new JLabel()); // 빈 라벨
-        panel.add(new JLabel()); // 빈 라벨
-        panel.add(new JLabel()); // 빈 라벨
-        panel.add(searchButton);
-
-        // 프레임에 패널과 테이블을 추가
-        add(panel, BorderLayout.NORTH);
-        add(scrollPane, BorderLayout.CENTER);
+        // 수강 과목 조회 페이지에 필요한 컴포넌트 및 로직을 추가합니다.
+        displayTimeTable();
 
         setVisible(true);
     }
 
-    // MySQL을 사용하여 학생의 시간표 조회
-    private void retrieveStudentTimeTable(String studentId) {
+    private void displayTimeTable() {
+        // 테이블 모델 생성
+        DefaultTableModel tableModel = new DefaultTableModel();
+        timeTable = new JTable(tableModel);
+
+        // 컬럼명 설정
+        String[] columnNames = {"과목명", "강의 번호", "강의실", "수업 시간", "학점"};
+        tableModel.setColumnIdentifiers(columnNames);
+
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/urp", "root", "root");
+            DAO.SetConnection("urp", "root", "root");
 
-            // listeningclass 테이블에서 학생이 수강한 강의의 CID 조회
-            String listeningQuery = "SELECT CID FROM listeningclass WHERE SID = ?";
-            PreparedStatement listeningPstmt = conn.prepareStatement(listeningQuery);
-            listeningPstmt.setString(1, studentId);
+            // SID에 해당하는 학생이 수강 중인 과목을 찾습니다.
+            String listeningClassQuery = "SELECT CID FROM listeningclass WHERE SID = ?";
+            PreparedStatement listeningClassStatement = DAO.conn.prepareStatement(listeningClassQuery);
+            listeningClassStatement.setString(1, studentId);
 
-            ResultSet listeningRs = listeningPstmt.executeQuery();
+            ResultSet listeningClassResultSet = listeningClassStatement.executeQuery();
 
-            // ResultSet의 데이터를 Vector<Vector<Object>>로 변환하여 JTable에 표시
-            Vector<Vector<Object>> data = new Vector<>();
-            while (listeningRs.next()) {
-                String classId = listeningRs.getString("CID");
+            while (listeningClassResultSet.next()) {
+                String courseId = listeningClassResultSet.getString("CID");
 
-                // class 테이블에서 CID에 해당하는 강의 정보 조회
-                String classQuery = "SELECT * FROM class WHERE CID = ?";
-                PreparedStatement classPstmt = conn.prepareStatement(classQuery);
-                classPstmt.setString(1, classId);
+                // CID에 해당하는 강의 정보를 가져옵니다.
+                String classQuery = "SELECT CID, classname, lectureid, classroom, classstarttime, classendtime, classdayoftheweek, grades " +
+                        "FROM class WHERE CID = ?";
+                PreparedStatement classStatement = DAO.conn.prepareStatement(classQuery);
+                classStatement.setString(1, courseId);
 
-                ResultSet classRs = classPstmt.executeQuery();
+                ResultSet classResultSet = classStatement.executeQuery();
 
-                while (classRs.next()) {
-                    Vector<Object> row = new Vector<>();
-                    row.add(classRs.getString("classname"));
-                    row.add(classRs.getString("classroom"));
-                    row.add(classRs.getString("classstarttime"));
-                    row.add(classRs.getString("classendtime"));
-                    row.add(classRs.getString("classdayoftheweek"));
-                    row.add(classRs.getString("grades"));
-                    data.add(row);
+                while (classResultSet.next()) {
+                    String className = classResultSet.getString("classname");
+                    String lectureId = classResultSet.getString("lectureid");
+                    String classroom = classResultSet.getString("classroom");
+                    String startTime = classResultSet.getString("classstarttime");
+                    String endTime = classResultSet.getString("classendtime");
+                    String dayOfWeek = classResultSet.getString("classdayoftheweek");
+                    String grades = classResultSet.getString("grades");
+
+                    // 결과 처리 부분: 가져온 강의 정보를 모델에 추가
+                    Vector<String> rowData = new Vector<>();
+                    rowData.add(className);
+                    rowData.add(lectureId);
+                    rowData.add(classroom);
+                    rowData.add(dayOfWeek + " " + startTime + " - " + endTime);
+                    rowData.add(grades);
+
+                    tableModel.addRow(rowData);
                 }
 
-                classRs.close();
-                classPstmt.close();
+                classResultSet.close();
+                classStatement.close();
             }
 
-            // 테이블 모델 생성 및 데이터 설정
-            Vector<String> columnNames = new Vector<>();
-            columnNames.add("강의명");
-            columnNames.add("강의실");
-            columnNames.add("시작 시간");
-            columnNames.add("종료 시간");
-            columnNames.add("강의 요일");
-            columnNames.add("성적");
+            listeningClassResultSet.close();
+            listeningClassStatement.close();
 
-            DefaultTableModel model = new DefaultTableModel(data, columnNames);
-            timeTable.setModel(model);
+            // 테이블을 스크롤 가능하도록 패널에 추가
+            JScrollPane scrollPane = new JScrollPane(timeTable);
+            add(scrollPane, BorderLayout.CENTER);
 
-            listeningRs.close();
-            listeningPstmt.close();
-            conn.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
+            // TODO: 에러 처리 로직을 추가할 수 있습니다.
         }
     }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new StudentTimeTable();
+            new StudentTimeTable("123"); // 예시로 "123"이라는 SID를 사용
         });
     }
 }

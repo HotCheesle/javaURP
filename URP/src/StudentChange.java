@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public class StudentChange extends JFrame {
 
@@ -12,7 +13,7 @@ public class StudentChange extends JFrame {
     private JTextField passwordField;
     private JTextField birthdateField;
 
-    public StudentChange() {
+    public StudentChange(String studentId) {
         super("정보 변경 페이지");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(400, 300);
@@ -27,7 +28,7 @@ public class StudentChange extends JFrame {
         updateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                updateStudentInfo();
+                updateStudentInfo(studentId);
             }
         });
 
@@ -48,26 +49,22 @@ public class StudentChange extends JFrame {
     }
 
     // MySQL을 사용하여 학생 정보 업데이트
-    private void updateStudentInfo() {
+    private void updateStudentInfo(String studentId) {
         // 유효성 검사를 통해 데이터 형식 확인
         if (!isValidData()) {
             return;
         }
 
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/URP", "root", "root");
+            DAO.SetConnection("urp", "root", "root");
 
-            String updateQuery = "UPDATE students SET sname=?, pw=?, birthdate=?";
-            PreparedStatement pstmt = conn.prepareStatement(updateQuery);
-
-            // 현재 로그인한 학생의 학생 아이디는 알아야 합니다.
-            // 여기에서는 임의로 's'로 시작하는 학생 아이디를 사용하였습니다. 실제 사용자의 아이디에 맞게 수정하세요.
-            String studentId = "s123"; // 예시 학생 아이디
+            String updateQuery = "UPDATE students SET sname=?, pw=?, birthdate=? WHERE SID=?";
+            PreparedStatement pstmt = DAO.conn.prepareStatement(updateQuery);
 
             pstmt.setString(1, nameField.getText());
             pstmt.setString(2, passwordField.getText());
             pstmt.setString(3, birthdateField.getText());
+            pstmt.setString(4, studentId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -77,8 +74,8 @@ public class StudentChange extends JFrame {
             }
 
             pstmt.close();
-            conn.close();
-        } catch (Exception e) {
+            DAO.conn.close();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -107,7 +104,9 @@ public class StudentChange extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new StudentChange();
+            // 여기에서는 예시로 "s123"이라는 SID로 StudentChange를 호출하고 있습니다.
+            // 로그인 시 사용자의 SID를 전달받아야 합니다.
+            new StudentChange("s123");
         });
     }
 }

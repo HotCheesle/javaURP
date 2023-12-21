@@ -7,7 +7,7 @@ import java.sql.Statement;
 public class DAO {
 	public final static String MYSQL = "com.mysql.cj.jdbc.Driver";
 	public static Connection conn = null;
-	public static void SetConnection(String db, String id, String pw){
+	public static Connection SetConnection(String db, String id, String pw){
 		String conn_url;
 		conn_url = "jdbc:mysql://localhost:3306/" + db;
 		
@@ -19,6 +19,7 @@ public class DAO {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return conn;
 	}
 	public static ResultSet StudentLogin(String[] param){ // {id, pw}
 		try	{
@@ -57,6 +58,9 @@ public class DAO {
 			return null;
 		}
 	}
+	
+	
+	
 	public static String ParamToString(String[] param)
 	{
 		if (param == null)
