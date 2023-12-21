@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 public class Main {
 
     private static String currentUserRole;
-    private static String currentUserId;
+    private static int currentUserId;
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
@@ -51,12 +51,12 @@ public class Main {
                 try {
                     if (rss.next()) {
                         currentUserRole = "학생";
-                        currentUserId = rss.getString("SID");
+                        currentUserId = rss.getInt("SID");
                         StudentMain();
                         loginFrame.dispose();
                     } else if (rsp.next()) {
                         currentUserRole = "교수";
-                        currentUserId = rsp.getString("PID");
+                        currentUserId = rsp.getInt("PID");
                         ProfessorMain();
                         loginFrame.dispose();
                     } else {

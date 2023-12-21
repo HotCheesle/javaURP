@@ -13,7 +13,7 @@ public class StudentChange extends JFrame {
     private JTextField passwordField;
     private JTextField birthdateField;
 
-    public StudentChange(String studentId) {
+    public StudentChange(int currentUserId) {
         super("정보 변경 페이지");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(400, 300);
@@ -28,7 +28,7 @@ public class StudentChange extends JFrame {
         updateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                updateStudentInfo(studentId);
+                updateStudentInfo(currentUserId);
             }
         });
 
@@ -49,7 +49,7 @@ public class StudentChange extends JFrame {
     }
 
     // MySQL을 사용하여 학생 정보 업데이트
-    private void updateStudentInfo(String studentId) {
+    private void updateStudentInfo(int currentUserId) {
         // 유효성 검사를 통해 데이터 형식 확인
         if (!isValidData()) {
             return;
@@ -64,7 +64,7 @@ public class StudentChange extends JFrame {
             pstmt.setString(1, nameField.getText());
             pstmt.setString(2, passwordField.getText());
             pstmt.setString(3, birthdateField.getText());
-            pstmt.setString(4, studentId);
+            pstmt.setInt(4, currentUserId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -106,7 +106,7 @@ public class StudentChange extends JFrame {
         SwingUtilities.invokeLater(() -> {
             // 여기에서는 예시로 "s123"이라는 SID로 StudentChange를 호출하고 있습니다.
             // 로그인 시 사용자의 SID를 전달받아야 합니다.
-            new StudentChange("s123");
+            new StudentChange(123);
         });
     }
 }

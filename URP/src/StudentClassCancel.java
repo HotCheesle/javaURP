@@ -26,7 +26,11 @@ public class StudentClassCancel extends JFrame {
         setVisible(true);
     }
 
-    private void displayClassList() {
+    public StudentClassCancel(int currentUserId) {
+		// TODO Auto-generated constructor stub
+	}
+
+	private void displayClassList() {
         // 강의 목록을 담을 리스트 모델 생성
         DefaultListModel<String> listModel = new DefaultListModel<>();
         classList = new JList<>(listModel);
