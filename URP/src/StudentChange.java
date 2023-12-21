@@ -10,7 +10,6 @@ import java.sql.ResultSet;
 
 public class StudentChange extends JFrame {
 
-	private int SID;
     private JTextField nameField;
     private JTextField passwordField;
     private JTextField birthdateField;
@@ -18,6 +17,7 @@ public class StudentChange extends JFrame {
 
     public StudentChange(int currentUserId) {
         super("정보 변경 페이지");
+        JFrame frm = this; // 액션리스너 내부에서 사용하기 위함
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(400, 400);
         setLayout(new BorderLayout());
@@ -26,16 +26,30 @@ public class StudentChange extends JFrame {
         passwordField = new JTextField();
         birthdateField = new JTextField();
         
+        JButton updateButton = new JButton("정보 수정");
+        
         try {
         	ResultSet rss = DAO.GetStudent(currentUserId);
-        	
+        	if (rss.next()) {
+        		nameField.setText(rss.getString("sname"));
+        		idField.setText(rss.getString("id"));
+        		passwordField.setText(rss.getString("pw"));
+        		birthdateField.setText(rss.getString("birthdate"));
+        	}
         } catch(Exception ex) {}
-
-        JButton updateButton = new JButton("정보 수정");
+        
         updateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                updateStudentInfo(currentUserId);
+            	if (!isValidData()) {
+            		
+                }
+            	else {
+            		DAO.ChangeStudent(currentUserId, nameField.getText(), idField.getText(),
+            				passwordField.getText(), birthdateField.getText());
+            		JOptionPane.showMessageDialog(frm, "수정이 완료되었습니다.");
+            		frm.dispose();
+            	}
             }
         });
 
@@ -57,54 +71,16 @@ public class StudentChange extends JFrame {
         setVisible(true);
     }
 
-    // MySQL을 사용하여 학생 정보 업데이트
-    private void updateStudentInfo(int currentUserId) {
-        // 유효성 검사를 통해 데이터 형식 확인
-        if (!isValidData()) {
-            return;
-        }
-
-        try {
-
-            String updateQuery = "UPDATE students SET sname=?, pw=?, birthdate=? WHERE SID=?";
-            PreparedStatement pstmt = DAO.conn.prepareStatement(updateQuery);
-
-            pstmt.setString(1, nameField.getText());
-            pstmt.setString(2, passwordField.getText());
-            pstmt.setString(3, birthdateField.getText());
-            pstmt.setInt(4, currentUserId);
-
-            int rowsAffected = pstmt.executeUpdate();
-            if (rowsAffected > 0) {
-                JOptionPane.showMessageDialog(this, "정보가 성공적으로 수정되었습니다.");
-            } else {
-                JOptionPane.showMessageDialog(this, "정보 수정에 실패했습니다.");
-            }
-
-            pstmt.close();
-            DAO.conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     // 유효성 검사를 통해 데이터 형식 확인
     private boolean isValidData() {
         String name = nameField.getText();
         String password = passwordField.getText();
-        String birthdate = birthdateField.getText();
+        String id = idField.getText();
 
-        if (name.isEmpty() || password.isEmpty() || birthdate.isEmpty()) {
+        if (name.isEmpty() || password.isEmpty() || id.isEmpty()) {
             JOptionPane.showMessageDialog(this, "빈 칸을 모두 채워주세요.");
             return false;
         }
-
-        // 예시: 생년월일 형식 검사
-        if (!birthdate.matches("\\d{4}-\\d{2}-\\d{2}")) {
-            JOptionPane.showMessageDialog(this, "올바른 생년월일 형식이 아닙니다. (예: 2000-01-01)");
-            return false;
-        }
-
         return true;
     }
 }

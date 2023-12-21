@@ -153,6 +153,26 @@ public class DAO {
 				String proc = "call GetStudent";
 				String pa = "(" + sid + ")";
 				proc += pa;
+				System.out.println(proc);
+				ResultSet rs = stmt.executeQuery(proc);
+				return rs;
+			}
+			else{
+				return null;
+			}
+		}
+		catch(Exception e){System.out.println("익셉션?");}
+			return null;
+	}
+	public static ResultSet ChangeStudent(int sid, String sname, 
+			String id, String pw, String birthdate){ // {SID, sname, id, pw, birthdate}
+		try	{
+			if(conn != null){
+				Statement stmt = conn.createStatement();
+				String proc = "call ChangeStudent";
+				String pa = "(" + sid + ",'" + sname + "','" + id + "','" + pw + "','" + birthdate + "')";
+				proc += pa;
+				System.out.println(proc);
 				ResultSet rs = stmt.executeQuery(proc);
 				return rs;
 			}
