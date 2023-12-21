@@ -18,7 +18,7 @@ public class Main {
         });
         
         try {
-    		DAO.SetConnection("urp", "root", "ssho000805!");//여기에 비밀번호와 데이터베이스 이름 입력
+    		DAO.SetConnection("urp", "root", "root");//여기에 비밀번호와 데이터베이스 이름 입력
     	}
     	catch(Exception e){}
     }
