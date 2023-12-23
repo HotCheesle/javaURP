@@ -78,7 +78,7 @@ public class StudentChange extends JFrame {
         String id = idField.getText();
 
         if (name.isEmpty() || password.isEmpty() || id.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "빈 칸을 모두 채워주세요.");
+            JOptionPane.showMessageDialog(this, "빈 칸을 모두 채워야합니다.");
             return false;
         }
         return true;

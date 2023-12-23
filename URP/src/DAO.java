@@ -55,9 +55,7 @@ public class DAO {
 				return null;
 			}
 		}
-		catch(Exception e){
-			return null;
-		}
+		catch(Exception e){return null;}
 	}
 	public static ResultSet ProfessorLogin(String[] param){ // {id, pw}
 		try	{
@@ -72,9 +70,7 @@ public class DAO {
 				return null;
 			}
 		}
-		catch(Exception e){
-			return null;
-		}
+		catch(Exception e){return null;}
 	}
 	public static ResultSet GetDepartmentID(String[] param){ // {department}
 		try	{
@@ -89,8 +85,7 @@ public class DAO {
 				return null;
 			}
 		}
-		catch(Exception e){}
-			return null;
+		catch(Exception e){return null;}
 	}
 	public static ResultSet GetAdvisorID(int param){ // {departmentid}
 		try	{
@@ -106,11 +101,9 @@ public class DAO {
 				return null;
 			}
 		}
-		catch(Exception e){
-			return null;
-		}
+		catch(Exception e){return null;}
 	}
-	public static ResultSet SignUp(String sname, String id, String pw, int departmentid, String birthdate, int advisorid){ 
+	public static void SignUp(String sname, String id, String pw, int departmentid, String birthdate, int advisorid){ 
 		try	{
 			if(conn != null){
 				Statement stmt = conn.createStatement();
@@ -118,17 +111,10 @@ public class DAO {
 				String pa = "('" + sname + "','" + id + "','" + pw + "'," + departmentid
 						+ ",'" + birthdate + "'," + advisorid + ")";
 				proc += pa;
-				System.out.println(proc); // testcode
-				ResultSet rs = stmt.executeQuery(proc);
-				return rs;
-			}
-			else{
-				return null;
+				stmt.executeQuery(proc);
 			}
 		}
-		catch(Exception e){
-			return null;
-		}
+		catch(Exception e){}
 	}
 	public static ResultSet IDduplication(String[] param){ // {id}
 		try	{
@@ -143,8 +129,7 @@ public class DAO {
 				return null;
 			}
 		}
-		catch(Exception e){}
-			return null;
+		catch(Exception e){return null;}
 	}
 	public static ResultSet GetStudent(int sid){ // {SID}
 		try	{
@@ -153,7 +138,6 @@ public class DAO {
 				String proc = "call GetStudent";
 				String pa = "(" + sid + ")";
 				proc += pa;
-				System.out.println(proc);
 				ResultSet rs = stmt.executeQuery(proc);
 				return rs;
 			}
@@ -161,8 +145,7 @@ public class DAO {
 				return null;
 			}
 		}
-		catch(Exception e){System.out.println("익셉션?");}
-			return null;
+		catch(Exception e){return null;}
 	}
 	public static ResultSet ChangeStudent(int sid, String sname, 
 			String id, String pw, String birthdate){ // {SID, sname, id, pw, birthdate}
@@ -172,7 +155,6 @@ public class DAO {
 				String proc = "call ChangeStudent";
 				String pa = "(" + sid + ",'" + sname + "','" + id + "','" + pw + "','" + birthdate + "')";
 				proc += pa;
-				System.out.println(proc);
 				ResultSet rs = stmt.executeQuery(proc);
 				return rs;
 			}
@@ -180,10 +162,40 @@ public class DAO {
 				return null;
 			}
 		}
-		catch(Exception e){}
-			return null;
+		catch(Exception e){return null;}
 	}
-	
+	public static ResultSet GetClassTime(int pid){ // {PID}
+		try	{
+			if(conn != null){
+				Statement stmt = conn.createStatement();
+				String proc = "call GetClassTime";
+				String pa = "(" + pid + ")";
+				proc += pa;
+				ResultSet rs = stmt.executeQuery(proc);
+				return rs;
+			}
+			else{
+				return null;
+			}
+		}
+		catch(Exception e) {return null;}
+	}
+	public static void CreateClass(String name, int pid, String room, String start, 
+			String end, String day, String grade){ 
+		// {classname, PID, classroom, classstarttime, classendtime, classdayoftheweek, grades}
+		try	{
+			if(conn != null){
+				Statement stmt = conn.createStatement();
+				String proc = "call CreateClass";
+				String pa = "('" + name + "'," + pid + ",'" + room + "','" + start + "','" + end
+						+ "','" + day + "'," + grade + ")";
+				proc += pa;
+				System.out.println(proc);
+				stmt.executeQuery(proc);
+			}
+		}
+		catch(Exception e){}
+	}
 }
 
 

@@ -268,7 +268,7 @@ public class Main {
     }
     
     private static void createProfClassMakePage() {
-    	ProfClassMake ProfClassMakePage = new ProfClassMake();
+    	ProfClassMake ProfClassMakePage = new ProfClassMake(currentUserId);
     }
     
     private static void createProfClassDeletePage() {
