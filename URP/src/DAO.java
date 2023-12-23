@@ -190,11 +190,26 @@ public class DAO {
 				String pa = "('" + name + "'," + pid + ",'" + room + "','" + start + "','" + end
 						+ "','" + day + "'," + grade + ")";
 				proc += pa;
-				System.out.println(proc);
 				stmt.executeQuery(proc);
 			}
 		}
 		catch(Exception e){}
+	}
+	public static ResultSet GetProfessorClass(int pid){ // {PID}
+		try	{
+			if(conn != null){
+				Statement stmt = conn.createStatement();
+				String proc = "call GetProfessorClass";
+				String pa = "(" + pid + ")";
+				proc += pa;
+				ResultSet rs = stmt.executeQuery(proc);
+				return rs;
+			}
+			else{
+				return null;
+			}
+		}
+		catch(Exception e) {return null;}
 	}
 }
 

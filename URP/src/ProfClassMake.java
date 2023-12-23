@@ -100,6 +100,11 @@ public class ProfClassMake extends JFrame {
     		ied = Integer.parseInt(ed);
     	}catch(Exception ex) {}
     	
+    	if (ist > ied) {
+    		JOptionPane.showMessageDialog(this, "수업시작시간이 수업종료시간 이전이어야 합니다.");
+    		return false;
+    	}
+    	
     	try {
     		while (rst.next()) {
     			cstart = rst.getString("classstarttime");

@@ -272,7 +272,7 @@ public class Main {
     }
     
     private static void createProfClassDeletePage() {
-    	ProfClassDelete ProfClassDeletePage = new ProfClassDelete();
+    	ProfClassEdit ProfClassDeletePage = new ProfClassEdit(currentUserId);
     }
     
     private static JPanel create학적관리2Panel() { // 2 = 학생의 학적관리 패널
