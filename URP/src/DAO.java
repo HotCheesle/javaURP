@@ -211,6 +211,37 @@ public class DAO {
 		}
 		catch(Exception e) {return null;}
 	}
+	public static void UpdateClass(int cid, String name, String room, String start, 
+			String end, String day, String grade){ 
+		// {CID, classname, classroom, classstarttime, classendtime, classdayoftheweek, grades}
+		try	{
+			if(conn != null){
+				Statement stmt = conn.createStatement();
+				String proc = "call UpdateClass";
+				String pa = "(" + cid + ",'" + name + "','" + room + "','" + start + "','" + end
+						+ "','" + day + "'," + grade + ")";
+				proc += pa;
+				System.out.println(proc);
+				stmt.executeQuery(proc);
+			}
+		}
+		catch(Exception e){}
+	}
+	public static void DeleteClass(int cid){ // {CID}
+		try	{
+			if(conn != null){
+				Statement stmt = conn.createStatement();
+				String proc = "call DeleteClass";
+				String pa = "(" + cid + ")";
+				proc += pa;
+				System.out.println(proc);
+				stmt.executeQuery(proc);
+			}
+			else{}
+		}
+		catch(Exception e) {}
+	}
+	
 }
 
 

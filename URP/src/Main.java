@@ -236,7 +236,7 @@ public class Main {
     //여기서부터는 버튼마다의 각각 페이지 호출 객체 생성
     
     private static void createStudentInquiryPage() {
-        //StudentInquiry StudentInquiryPage = new StudentInquiry(currentUserId);
+        StudentInquiry StudentInquiryPage = new StudentInquiry(currentUserId);
     }
     
     private static void createStudentChangePage() {
@@ -244,7 +244,7 @@ public class Main {
     }
     
     private static void createStudentTimeTablePage() {
-        //StudentTimeTable StudentTimeTablePage = new StudentTimeTable(currentUserId);
+        StudentTimeTable StudentTimeTablePage = new StudentTimeTable(currentUserId);
     }
     
     private static void createStudentClassRegisterPage() {
@@ -308,7 +308,7 @@ public class Main {
         panel.setLayout(new FlowLayout());
 
         JButton 수업생성Button = new JButton("수업 생성");
-        JButton 수업삭제Button = new JButton("수업 삭제");
+        JButton 수업삭제Button = new JButton("수업 수정");
 
         수업생성Button.addActionListener(new ActionListener() {
             @Override

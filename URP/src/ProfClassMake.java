@@ -88,9 +88,9 @@ public class ProfClassMake extends JFrame {
     }
     private boolean isDupleTime(int pid) {
     	String start = (String) starttimeComboBox.getSelectedItem();
-    	String st = start.substring(0, 1);
+    	String st = start.substring(0, 2);
     	String end = (String) endtimeComboBox.getSelectedItem();
-    	String ed = end.substring(0, 1);
+    	String ed = end.substring(0, 2);
     	String day = (String) dayoftheweekComboBox.getSelectedItem();
     	ResultSet rst = DAO.GetClassTime(pid);
     	String cstart, cend, cday, cst, ced;
@@ -108,9 +108,9 @@ public class ProfClassMake extends JFrame {
     	try {
     		while (rst.next()) {
     			cstart = rst.getString("classstarttime");
-    			cst = cstart.substring(0, 1);
+    			cst = cstart.substring(0, 2);
     			cend = rst.getString("classendtime");
-    			ced = cend.substring(0, 1);
+    			ced = cend.substring(0, 2);
     			cday = rst.getString("classdayoftheweek");
     			try {
     	    		cist = Integer.parseInt(cst);
