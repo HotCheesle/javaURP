@@ -1,12 +1,9 @@
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 
 public class DAO {
 	public final static String MYSQL = "com.mysql.cj.jdbc.Driver";
@@ -19,10 +16,7 @@ public class DAO {
 			conn = DriverManager.getConnection(conn_url, id, pw);
 			System.out.println("db연결성공");
 			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} catch (SQLException e) {e.printStackTrace();}
 		return conn;
 	}
 	public static String ParamToString(String[] param)

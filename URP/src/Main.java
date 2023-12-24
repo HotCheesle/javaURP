@@ -2,14 +2,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-//import java.sql.Connection;
-//import java.sql.DriverManager;
 import java.sql.ResultSet;
-//import java.sql.Statement;
 
 public class Main {
 
-    private static String currentUserRole;
     private static int currentUserId;
 
     public static void main(String[] args) {
@@ -50,12 +46,10 @@ public class Main {
                 ResultSet rsp = DAO.ProfessorLogin(login);
                 try {
                     if (rss.next()) {
-                        currentUserRole = "학생";
                         currentUserId = rss.getInt("SID");
                         StudentMain();
                         loginFrame.dispose();
                     } else if (rsp.next()) {
-                        currentUserRole = "교수";
                         currentUserId = rsp.getInt("PID");
                         ProfessorMain();
                         loginFrame.dispose();

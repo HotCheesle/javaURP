@@ -86,15 +86,6 @@ public class StudentTimeTable extends JFrame {
             JScrollPane scrollPane = new JScrollPane(timeTable);
             add(scrollPane, BorderLayout.CENTER);
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-            // TODO: 에러 처리 로직을 추가할 수 있습니다.
-        }
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new StudentTimeTable(123); // 예시로 "123"이라는 SID를 사용
-        });
+        } catch (SQLException e) {e.printStackTrace();}
     }
 }
