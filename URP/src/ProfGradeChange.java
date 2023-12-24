@@ -1,119 +1,132 @@
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
-public class ProfGradeChange extends JFrame {
-
-    private JTextField sidField;
-    private JTextField cidField;
+public class ProfGradeChange {
+    private JFrame frame;
+    private JComboBox<Integer> classComboBox;
+    private JTable studentTable;
+    private DefaultTableModel tableModel;
     private JTextField scoreField;
+    private JButton updateButton;
 
-    public ProfGradeChange() {
-        super("성적 수정 페이지");
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(400, 300);
-        setLayout(new BorderLayout());
+    private int profId;
 
-        // 컴포넌트 초기화
-        sidField = new JTextField();
-        cidField = new JTextField();
-        scoreField = new JTextField();
+    public ProfGradeChange(int profId) {
+        this.profId = profId;
+        initialize();
+    }
 
-        JButton inputButton = new JButton("성적 수정");
+    private void initialize() {
+        frame = new JFrame("성적 입력/수정");
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setSize(500, 400);
+        frame.setLayout(new BorderLayout());
 
-        // 성적 수정 버튼의 ActionListener
-        inputButton.addActionListener(new ActionListener() {
+        // 강의 선택 콤보 박스
+        classComboBox = new JComboBox<>();
+        updateClassComboBox();
+
+        // 학생 성적 표
+        tableModel = new DefaultTableModel();
+        studentTable = new JTable(tableModel);
+        JScrollPane tableScrollPane = new JScrollPane(studentTable);
+
+        // 성적 입력 필드 및 버튼
+        JPanel scorePanel = new JPanel();
+        JLabel scoreLabel = new JLabel("성적:");
+        scoreField = new JTextField(5);
+        updateButton = new JButton("성적 업데이트");
+
+        // 성적 업데이트 버튼 리스너
+        updateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                modifyGrade();
+                updateStudentGrade();
             }
         });
 
-        // 패널 생성 및 컴포넌트 추가
-        JPanel panel = new JPanel(new GridLayout(4, 2));
-        panel.add(new JLabel("학생 ID:"));
-        panel.add(sidField);
-        panel.add(new JLabel("강의 ID:"));
-        panel.add(cidField);
-        panel.add(new JLabel("성적:"));
-        panel.add(scoreField);
-        panel.add(new JLabel()); // 빈 라벨
-        panel.add(inputButton);
+        scorePanel.add(scoreLabel);
+        scorePanel.add(scoreField);
+        scorePanel.add(updateButton);
 
-        add(panel, BorderLayout.CENTER);
+        // 프레임에 컴포넌트 추가
+        frame.add(classComboBox, BorderLayout.NORTH);
+        frame.add(tableScrollPane, BorderLayout.CENTER);
+        frame.add(scorePanel, BorderLayout.SOUTH);
 
-        setVisible(true);
+        // 프레임 표시
+        frame.setVisible(true);
     }
 
-    // 성적 수정 메서드
-    private void modifyGrade() {
+    // 강의 선택 콤보 박스 업데이트
+    private void updateClassComboBox() {
+        classComboBox.removeAllItems();
+        ResultSet classList = DAO.GetProfessorClass(profId);
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/urp", "root", "root");
+            while (classList.next()) {
+                int classId = classList.getInt("CID");
+                classComboBox.addItem(classId);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-            String sid = sidField.getText();
-            String cid = cidField.getText();
-            String newScore = scoreField.getText();
+        // 콤보 박스 아이템 선택 리스너
+        classComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedClassId = (int) classComboBox.getSelectedItem();
+                updateStudentTable(selectedClassId);
+            }
+        });
+    }
 
-            // 기존 성적이 존재하는지 확인
-            if (isExistingGrade(sid, cid)) {
-                // 성적이 존재하면 수정
-                String query = "UPDATE listeningclass SET score = ? WHERE SID = ? AND CID = ?";
-                PreparedStatement pstmt = conn.prepareStatement(query);
-                pstmt.setString(1, newScore);
-                pstmt.setString(2, sid);
-                pstmt.setString(3, cid);
+    // 학생 성적 표 업데이트
+    private void updateStudentTable(int classId) {
+        tableModel.setColumnCount(0);
+        tableModel.setRowCount(0);
 
-                pstmt.executeUpdate();
-                pstmt.close();
-
-                JOptionPane.showMessageDialog(this, "성적이 수정되었습니다.");
-            } else {
-                // 성적이 존재하지 않으면 메시지 출력
-                JOptionPane.showMessageDialog(this, "해당 학생과 강의에 대한 성적이 존재하지 않습니다.");
+        ResultSet studentList = DAO.GetClassStudents(classId);
+        try {
+            int columnCount = studentList.getMetaData().getColumnCount();
+            for (int i = 1; i <= columnCount; i++) {
+                tableModel.addColumn(studentList.getMetaData().getColumnName(i));
             }
 
-            conn.close();
-        } catch (Exception ex) {
-            ex.printStackTrace();
+            while (studentList.next()) {
+                Object[] rowData = new Object[columnCount];
+                for (int i = 1; i <= columnCount; i++) {
+                    rowData[i - 1] = studentList.getObject(i);
+                }
+                tableModel.addRow(rowData);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
-    // 기존 성적이 존재하는지 확인하는 메서드
-    private boolean isExistingGrade(String sid, String cid) {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/urp", "root", "root");
-
-            String query = "SELECT * FROM listeningclass WHERE SID = ? AND CID = ?";
-            PreparedStatement pstmt = conn.prepareStatement(query);
-            pstmt.setString(1, sid);
-            pstmt.setString(2, cid);
-
-            ResultSet rs = pstmt.executeQuery();
-
-            // 결과가 있으면 성적이 이미 존재함
-            boolean isExisting = rs.next();
-
-            rs.close();
-            pstmt.close();
-            conn.close();
-
-            return isExisting;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return false;
+    // 성적 업데이트 메서드
+    private void updateStudentGrade() {
+        int classId = (int) classComboBox.getSelectedItem();
+        int selectedRow = studentTable.getSelectedRow();
+        if (selectedRow != -1) {
+            int studentId = (int) tableModel.getValueAt(selectedRow, 0);
+            try {
+                float newScore = Float.parseFloat(scoreField.getText());
+                DAO.UpdateStudentGrade(profId, classId, studentId, newScore);
+                JOptionPane.showMessageDialog(frame, "성적이 업데이트되었습니다.");
+                updateStudentTable(classId);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(frame, "유효한 성적을 입력하세요.", "오류", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(frame, "학생을 선택하세요.", "경고", JOptionPane.WARNING_MESSAGE);
         }
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new ProfGradeChange();
-        });
     }
 }

@@ -66,6 +66,22 @@ public class DAO {
 		}
 		catch(Exception e){return null;}
 	}
+	public static ResultSet GetStudentTimeTable(int studentId) {
+	    try {
+	        if (conn != null) {
+	            CallableStatement cstmt = conn.prepareCall("{call GetStudentTimeTable(?)}");
+	            cstmt.setInt(1, studentId);
+
+	            cstmt.execute();
+	            return cstmt.getResultSet();
+	        }
+	        return null;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return null;
+	    }
+	}
+	
 	public static ResultSet GetDepartmentID(String[] param){ // {department}
 		try	{
 			if(conn != null){
@@ -311,7 +327,37 @@ public class DAO {
 	        return null;
 	    }
 	}
-	
+	public static void UpdateStudentGrade(int profId, int classId, int studentId, float newScore) {
+	    try {
+	        if (conn != null) {
+	            CallableStatement cstmt = conn.prepareCall("{call UpdateStudentGrade(?, ?, ?, ?)}");
+	            cstmt.setInt(1, profId);
+	            cstmt.setInt(2, classId);
+	            cstmt.setInt(3, studentId);
+	            cstmt.setFloat(4, newScore);
+
+	            cstmt.executeUpdate();
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
+	public static ResultSet GetClassStudents(int classId) {
+	    try {
+	        if (conn != null) {
+	            CallableStatement cstmt = conn.prepareCall("{call GetClassStudents(?)}");
+	            cstmt.setInt(1, classId);
+
+	            cstmt.execute();
+	            return cstmt.getResultSet();
+	        }
+	        return null;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return null;
+	    }
+	}
+
 }
 
 

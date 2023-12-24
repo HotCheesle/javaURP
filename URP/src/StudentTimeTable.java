@@ -1,91 +1,47 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Vector;
 
 public class StudentTimeTable extends JFrame {
 
-    private int studentId; // SID 저장 변수 추가
-    private JTable timeTable;
+    private JTable timetableTable;
 
     public StudentTimeTable(int studentId) {
-        super("수강 과목 조회 페이지");
+        setTitle("학생 시간표");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(800, 600);
-        setLayout(new BorderLayout());
+        setSize(600, 400);
 
-        this.studentId = studentId; // SID 설정
+        ResultSet timetableData = DAO.GetStudentTimeTable(studentId);
 
-        // 수강 과목 조회 페이지에 필요한 컴포넌트 및 로직을 추가합니다.
-        displayTimeTable();
-
-        setVisible(true);
-    }
-
-    private void displayTimeTable() {
-        // 테이블 모델 생성
-        DefaultTableModel tableModel = new DefaultTableModel();
-        timeTable = new JTable(tableModel);
-
-        // 컬럼명 설정
-        String[] columnNames = {"과목명", "강의 번호", "강의실", "수업 시간", "학점"};
-        tableModel.setColumnIdentifiers(columnNames);
+        Vector<Vector<String>> dataVector = new Vector<>();
+        Vector<String> columnNames = new Vector<>();
+        columnNames.add("과목명");
+        columnNames.add("강의실");
+        columnNames.add("시간");
+        columnNames.add("요일");
 
         try {
-            //DAO.SetConnection("urp", "root", "root");
-
-            // SID에 해당하는 학생이 수강 중인 과목을 찾습니다.
-            String listeningClassQuery = "SELECT CID FROM listeningclass WHERE SID = ?";
-            PreparedStatement listeningClassStatement = DAO.conn.prepareStatement(listeningClassQuery);
-            listeningClassStatement.setInt(1, studentId);
-
-            ResultSet listeningClassResultSet = listeningClassStatement.executeQuery();
-
-            while (listeningClassResultSet.next()) {
-                String courseId = listeningClassResultSet.getString("CID");
-
-                // CID에 해당하는 강의 정보를 가져옵니다.
-                String classQuery = "SELECT CID, classname, lectureid, classroom, classstarttime, classendtime, classdayoftheweek, grades " +
-                        "FROM class WHERE CID = ?";
-                PreparedStatement classStatement = DAO.conn.prepareStatement(classQuery);
-                classStatement.setString(1, courseId);
-
-                ResultSet classResultSet = classStatement.executeQuery();
-
-                while (classResultSet.next()) {
-                    String className = classResultSet.getString("classname");
-                    String lectureId = classResultSet.getString("lectureid");
-                    String classroom = classResultSet.getString("classroom");
-                    String startTime = classResultSet.getString("classstarttime");
-                    String endTime = classResultSet.getString("classendtime");
-                    String dayOfWeek = classResultSet.getString("classdayoftheweek");
-                    String grades = classResultSet.getString("grades");
-
-                    // 결과 처리 부분: 가져온 강의 정보를 모델에 추가
-                    Vector<String> rowData = new Vector<>();
-                    rowData.add(className);
-                    rowData.add(lectureId);
-                    rowData.add(classroom);
-                    rowData.add(dayOfWeek + " " + startTime + " - " + endTime);
-                    rowData.add(grades);
-
-                    tableModel.addRow(rowData);
-                }
-
-                classResultSet.close();
-                classStatement.close();
+            while (timetableData.next()) {
+                Vector<String> row = new Vector<>();
+                row.add(timetableData.getString("classname"));
+                row.add(timetableData.getString("classroom"));
+                row.add(timetableData.getString("classstarttime") + " - " + timetableData.getString("classendtime"));
+                row.add(timetableData.getString("classdayoftheweek"));
+                dataVector.add(row);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-            listeningClassResultSet.close();
-            listeningClassStatement.close();
+        DefaultTableModel tableModel = new DefaultTableModel(dataVector, columnNames);
+        timetableTable = new JTable(tableModel);
+        JScrollPane scrollPane = new JScrollPane(timetableTable);
 
-            // 테이블을 스크롤 가능하도록 패널에 추가
-            JScrollPane scrollPane = new JScrollPane(timeTable);
-            add(scrollPane, BorderLayout.CENTER);
+        getContentPane().setLayout(new BorderLayout());
+        getContentPane().add(scrollPane, BorderLayout.CENTER);
 
-        } catch (SQLException e) {e.printStackTrace();}
+        setVisible(true);
     }
 }
