@@ -118,7 +118,7 @@ public class ProfGradeChange {
         if (selectedRow != -1) {
             int studentId = (int) tableModel.getValueAt(selectedRow, 0);
             try {
-                float newScore = Integer.parseInt(scoreField.getText());
+                float newScore = Float.parseFloat(scoreField.getText());
                 DAO.UpdateStudentGrade(profId, classId, studentId, newScore);
                 JOptionPane.showMessageDialog(frame, "성적이 업데이트되었습니다.");
                 updateStudentTable(classId);
