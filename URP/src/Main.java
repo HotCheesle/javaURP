@@ -14,7 +14,7 @@ public class Main {
         });
         
         try {
-    		DAO.SetConnection("urp", "root", "root");//여기에 비밀번호와 데이터베이스 이름 입력
+    		DAO.SetConnection("urp", "root", "ssho000805!");//여기에 비밀번호와 데이터베이스 이름 입력
     	}
     	catch(Exception e){}
     }
@@ -199,8 +199,8 @@ public class Main {
         professorFrame.setLayout(new BorderLayout());
         
         JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.addTab("수업관리", create수업관리1Panel());
-        tabbedPane.addTab("성적관리", create성적관리1Panel());
+        tabbedPane.addTab("수업관리", createClassManagePanel());
+        tabbedPane.addTab("성적관리", createGradeManagePanel());
 
         professorFrame.add(tabbedPane, BorderLayout.CENTER);
 
@@ -215,9 +215,9 @@ public class Main {
         
         JTabbedPane tabbedPane = new JTabbedPane();
         // 학생 페이지에 필요한 탭 추가
-        tabbedPane.addTab("학적관리", create학적관리2Panel());
-        tabbedPane.addTab("수업관리", create수업관리2Panel());
-        tabbedPane.addTab("성적관리", create성적관리2Panel());
+        tabbedPane.addTab("학적관리", createinfoPanel());
+        tabbedPane.addTab("수업관리", createClassPanel());
+        tabbedPane.addTab("성적관리", createGradePanel());
 
 
         studentFrame.add(tabbedPane, BorderLayout.CENTER);
@@ -263,38 +263,38 @@ public class Main {
     }
     
     private static void createProfClassDeletePage() {
-    	//ProfClassDelete ProfClassDeletePage = new ProfClassDelete();
+    	ProfClassEdit ProfClassEditPage = new ProfClassEdit(currentUserId);
     }
     
-    private static JPanel create학적관리2Panel() { // 2 = 학생의 학적관리 패널
+    private static JPanel createinfoPanel() { // 학생의 정보관리 패널
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout());
 
-        JButton 학적조회Button = new JButton("학적 조회");
-        JButton 정보변경Button = new JButton("정보 변경");
+        JButton InfoButton = new JButton("학적 조회");
+        JButton ChangeButton = new JButton("정보 변경");
 
-        학적조회Button.addActionListener(new ActionListener() {
+        InfoButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 createStudentInquiryPage();
             }
         });
         
-        정보변경Button.addActionListener(new ActionListener() {
+        ChangeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 createStudentChangePage();
             }
         });
         
-        panel.add(학적조회Button);
-        panel.add(정보변경Button);
+        panel.add(InfoButton);
+        panel.add(ChangeButton);
 
         return panel;
     }
 
     
-    private static JPanel create수업관리1Panel() { // 1 = 교수의 수업관리 패널
+    private static JPanel createClassManagePanel() { // 교수의 수업관리 패널
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout());
 
@@ -321,42 +321,42 @@ public class Main {
         return panel;
     }
 
-    private static JPanel create성적관리1Panel() {
+    private static JPanel createGradeManagePanel() { // 교수의 성적입력/수정 패널
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout());
         
-        JButton 성적수정Button = new JButton("성적 입력/수정");
+        JButton ChangeGradeButton = new JButton("성적 입력/수정");
         
-        성적수정Button.addActionListener(new ActionListener() {
+        ChangeGradeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
             	createProfGradeChangePage();
             }
         });
         
-        panel.add(성적수정Button);
+        panel.add(ChangeGradeButton);
 
         return panel;
     }
 
-    private static JPanel create성적관리2Panel() {
+    private static JPanel createGradePanel() { // 학생의 성적관리 패널
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout());
 
-        JButton 성적조회Button = new JButton("성적 조회");
+        JButton GradeViewButton = new JButton("성적 조회");
 
-        성적조회Button.addActionListener(new ActionListener() {
+        GradeViewButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
             	createStudentGradePage();
             }
         });
         
-        panel.add(성적조회Button);
+        panel.add(GradeViewButton);
 
         return panel;
     }
-    private static JPanel create수업관리2Panel() {
+    private static JPanel createClassPanel() { // 학생의 수업관리 패널
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout());
 
