@@ -10,7 +10,7 @@ public class Main {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            로그인페이지();
+        	LoginPage();
         });
         
         try {
@@ -19,7 +19,7 @@ public class Main {
     	catch(Exception e){}
     }
 
-    private static void 로그인페이지() {
+    private static void LoginPage() {
         JFrame loginFrame = new JFrame("URP 로그인");
         loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         loginFrame.setSize(300, 200);
@@ -62,13 +62,10 @@ public class Main {
             }
         });
 
-        
-        
-        // 회원가입 버튼의 ActionListener
         signUpButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	회원가입페이지();
+            	SignUpPage();
             }
         });
 
@@ -77,14 +74,14 @@ public class Main {
         loginFrame.add(pwLabel);
         loginFrame.add(pwField);
         loginFrame.add(loginButton);
-        loginFrame.add(signUpButton);  // 회원가입 버튼 추가
-        loginFrame.add(new JLabel()); // 빈 라벨
-        loginFrame.add(new JLabel()); // 빈 라벨
+        loginFrame.add(signUpButton);
+        loginFrame.add(new JLabel());
+        loginFrame.add(new JLabel());
 
         loginFrame.setVisible(true);
     }
     
-    private static void 회원가입페이지() {
+    private static void SignUpPage() {
         JFrame signUpFrame = new JFrame("회원가입");
         signUpFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         signUpFrame.setSize(400, 300);
@@ -112,7 +109,6 @@ public class Main {
         signUpButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // 회원가입 버튼이 클릭되었을 때의 로직
                 String id = idField.getText();
                 char[] pwChars = pwField.getPassword();
                 String password = new String(pwChars);
@@ -155,13 +151,6 @@ public class Main {
                 		}
                 	}
                 } catch (Exception ex) {System.out.println("익셉션");}
-
-                // 테스트를 위해 입력된 정보를 콘솔에 출력
-                //System.out.println("ID: " + id);
-                //System.out.println("Password: " + password);
-                //System.out.println("이름: " + name);
-                //System.out.println("학과: " + selectedDepartment);
-                //System.out.println("생일: " + birthday);
             }
         });
 
@@ -175,22 +164,11 @@ public class Main {
         signUpFrame.add(departmentComboBox);
         signUpFrame.add(birthdayLabel);
         signUpFrame.add(birthdayField);
-        signUpFrame.add(new JLabel()); // 빈 라벨
+        signUpFrame.add(new JLabel());
         signUpFrame.add(signUpButton);
 
         signUpFrame.setVisible(true);
     }
-
-    
-/*    private static boolean isProfessor(String id, String password) {
-        // 교수 계정 확인 로직을 여기에 추가
-        return id.equals("p") && password.equals("p");
-    }
-
-    private static boolean isStudent(String id, String password) {
-        // 학생 계정 확인 로직을 여기에 추가
-        return id.equals("s") && password.equals("s");
-    } */
 
     private static void ProfessorMain() {
         JFrame professorFrame = new JFrame("교수 페이지");
@@ -199,8 +177,8 @@ public class Main {
         professorFrame.setLayout(new BorderLayout());
         
         JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.addTab("수업관리", create수업관리1Panel());
-        tabbedPane.addTab("성적관리", create성적관리1Panel());
+        tabbedPane.addTab("수업관리", createProfClassPanel());
+        tabbedPane.addTab("성적관리", createProfGradePanel());
 
         professorFrame.add(tabbedPane, BorderLayout.CENTER);
 
@@ -214,10 +192,9 @@ public class Main {
         studentFrame.setLayout(new BorderLayout());
         
         JTabbedPane tabbedPane = new JTabbedPane();
-        // 학생 페이지에 필요한 탭 추가
-        tabbedPane.addTab("학적관리", create학적관리2Panel());
-        tabbedPane.addTab("수업관리", create수업관리2Panel());
-        tabbedPane.addTab("성적관리", create성적관리2Panel());
+        tabbedPane.addTab("학적관리", createStudentAcademicPanel()); //학적관리
+        tabbedPane.addTab("수업관리", createStudentClassPanel()); //수업관리
+        tabbedPane.addTab("성적관리", createStudentGradePanel()); //성적관리
 
 
         studentFrame.add(tabbedPane, BorderLayout.CENTER);
@@ -225,10 +202,7 @@ public class Main {
         studentFrame.setVisible(true);
     }
 
-
-    
     //여기서부터는 버튼마다의 각각 페이지 호출 객체 생성
-    
     private static void createStudentInquiryPage() {
         StudentInquiry StudentInquiryPage = new StudentInquiry(currentUserId);
     }
@@ -266,128 +240,130 @@ public class Main {
     	//ProfClassDelete ProfClassDeletePage = new ProfClassDelete();
     }
     
-    private static JPanel create학적관리2Panel() { // 2 = 학생의 학적관리 패널
+    
+    private static JPanel createStudentAcademicPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout());
 
-        JButton 학적조회Button = new JButton("학적 조회");
-        JButton 정보변경Button = new JButton("정보 변경");
+        JButton StudentInquiryButton = new JButton("학적 조회");
+        JButton StudentChangeButton = new JButton("정보 변경");
 
-        학적조회Button.addActionListener(new ActionListener() {
+        StudentInquiryButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 createStudentInquiryPage();
             }
         });
         
-        정보변경Button.addActionListener(new ActionListener() {
+        StudentChangeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 createStudentChangePage();
             }
         });
         
-        panel.add(학적조회Button);
-        panel.add(정보변경Button);
+        panel.add(StudentInquiryButton);
+        panel.add(StudentChangeButton);
 
         return panel;
     }
 
-    
-    private static JPanel create수업관리1Panel() { // 1 = 교수의 수업관리 패널
+    private static JPanel createStudentClassPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout());
 
-        JButton CreateClassButton = new JButton("수업 생성");
-        JButton EditClassButton = new JButton("수업 수정");
+        JButton StudentTimeTableButton = new JButton("시간표 조회");
+        JButton StudentClassRegisterButton = new JButton("수강 신청");
+        JButton StudentClassCancelButton = new JButton("수강 취소");
 
-        CreateClassButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                createProfClassMakePage();
-            }
-        });
-        
-        EditClassButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                createProfClassDeletePage();
-            }
-        });
-        
-        panel.add(CreateClassButton);
-        panel.add(EditClassButton);
-
-        return panel;
-    }
-
-    private static JPanel create성적관리1Panel() {
-        JPanel panel = new JPanel();
-        panel.setLayout(new FlowLayout());
-        
-        JButton 성적수정Button = new JButton("성적 입력/수정");
-        
-        성적수정Button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-            	createProfGradeChangePage();
-            }
-        });
-        
-        panel.add(성적수정Button);
-
-        return panel;
-    }
-
-    private static JPanel create성적관리2Panel() {
-        JPanel panel = new JPanel();
-        panel.setLayout(new FlowLayout());
-
-        JButton 성적조회Button = new JButton("성적 조회");
-
-        성적조회Button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-            	createStudentGradePage();
-            }
-        });
-        
-        panel.add(성적조회Button);
-
-        return panel;
-    }
-    private static JPanel create수업관리2Panel() {
-        JPanel panel = new JPanel();
-        panel.setLayout(new FlowLayout());
-
-        JButton TimeTableButton = new JButton("시간표 조회");
-        JButton RegisterClassButton = new JButton("수강 신청");
-        JButton ClassCancelButton = new JButton("수강 취소");
-
-        TimeTableButton.addActionListener(new ActionListener() {
+        StudentTimeTableButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
             	createStudentTimeTablePage();
             }
         });
         
-        RegisterClassButton.addActionListener(new ActionListener() {
+        StudentClassRegisterButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
             	createStudentClassRegisterPage();
             }
         });
         
-        ClassCancelButton.addActionListener(new ActionListener() {
+        StudentClassCancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
             	createStudentClassCancelPage();
             }
         });
         
-        panel.add(TimeTableButton);
-        panel.add(RegisterClassButton);
-        panel.add(ClassCancelButton);
+        panel.add(StudentTimeTableButton);
+        panel.add(StudentClassRegisterButton);
+        panel.add(StudentClassCancelButton);
+
+        return panel;
+    }
+    
+    private static JPanel createStudentGradePanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new FlowLayout());
+
+        JButton StudentGradeButton = new JButton("성적 조회");
+
+        StudentGradeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	createStudentGradePage();
+            }
+        });
+        
+        panel.add(StudentGradeButton);
+
+        return panel;
+    }
+
+    
+    private static JPanel createProfClassPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new FlowLayout());
+
+        JButton ProfCreateClassButton = new JButton("수업 생성");
+        JButton ProfClassDeleteButton = new JButton("수업 수정");
+
+        ProfCreateClassButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                createProfClassMakePage();
+            }
+        });
+        
+        ProfClassDeleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                createProfClassDeletePage();
+            }
+        });
+        
+        panel.add(ProfCreateClassButton);
+        panel.add(ProfClassDeleteButton);
+
+        return panel;
+    }
+
+    private static JPanel createProfGradePanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new FlowLayout());
+        
+        JButton ProfGradeChangeButton = new JButton("성적 입력/수정");
+        
+        ProfGradeChangeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	createProfGradeChangePage();
+            }
+        });
+        
+        panel.add(ProfGradeChangeButton);
 
         return panel;
     }
