@@ -15,7 +15,6 @@ public class StudentInquiry extends JFrame {
 
         this.studentId = studentId;
 
-        // 학적 조회 페이지에 필요한 컴포넌트 및 로직을 추가합니다.
         displayStudentInfo();
 
         setVisible(true);
@@ -35,7 +34,7 @@ public class StudentInquiry extends JFrame {
                 String birthday = resultSet.getString("birthdate");
                 String advisor = resultSet.getString("pname");
                 int grade = resultSet.getInt("grade");
-
+                
                 JLabel nameLabel = new JLabel("이름: " + name);
                 JLabel departmentLabel = new JLabel("학과: " + department);
                 JLabel enrollmentStatusLabel = new JLabel("재학상태: " + enrollmentStatus);
@@ -43,7 +42,6 @@ public class StudentInquiry extends JFrame {
                 JLabel advisorLabel = new JLabel("지도교수: " + advisor);
                 JLabel gradeLabel = new JLabel("학년: " + grade);
 
-                // 패널에 추가
                 panel.add(nameLabel);
                 panel.add(departmentLabel);
                 panel.add(enrollmentStatusLabel);
@@ -57,10 +55,8 @@ public class StudentInquiry extends JFrame {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            // TODO: 에러 처리 로직을 추가할 수 있습니다.
         }
 
         add(panel, BorderLayout.CENTER);
     }
-
 }
