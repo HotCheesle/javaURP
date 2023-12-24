@@ -63,11 +63,4 @@ public class StudentInquiry extends JFrame {
         add(panel, BorderLayout.CENTER);
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            // 여기서는 예시로 "123"이라는 SID로 StudentInquiry를 호출하고 있습니다.
-            // 로그인 시 사용자의 SID를 전달받아야 합니다.
-            new StudentInquiry(123);
-        });
-    }
 }

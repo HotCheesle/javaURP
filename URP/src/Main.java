@@ -259,12 +259,9 @@ public class Main {
     	StudentGrade StudentGradePage = new StudentGrade(currentUserId);
     }
     
-    private static void createProfGradeInputPage() {
-    	ProfGradeInput ProfGradeInputPage = new ProfGradeInput();
-    }
-    
+  
     private static void createProfGradeChangePage() {
-    	ProfGradeChange ProfGradeChangePage = new ProfGradeChange();
+    	ProfGradeChange ProfGradeChangePage = new ProfGradeChange(currentUserId);
     }
     
     private static void createProfClassMakePage() {
@@ -272,7 +269,7 @@ public class Main {
     }
     
     private static void createProfClassDeletePage() {
-    	ProfClassEdit ProfClassDeletePage = new ProfClassEdit(currentUserId);
+    	//ProfClassDelete ProfClassDeletePage = new ProfClassDelete();
     }
     
     private static JPanel create학적관리2Panel() { // 2 = 학생의 학적관리 패널
@@ -308,7 +305,7 @@ public class Main {
         panel.setLayout(new FlowLayout());
 
         JButton 수업생성Button = new JButton("수업 생성");
-        JButton 수업삭제Button = new JButton("수업 수정");
+        JButton 수업삭제Button = new JButton("수업 삭제");
 
         수업생성Button.addActionListener(new ActionListener() {
             @Override
@@ -333,16 +330,8 @@ public class Main {
     private static JPanel create성적관리1Panel() {
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout());
-
-        JButton 성적입력Button = new JButton("성적 입력");
-        JButton 성적수정Button = new JButton("성적 수정");
-
-        성적입력Button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-            	createProfGradeInputPage();
-            }
-        });
+        
+        JButton 성적수정Button = new JButton("성적 입력/수정");
         
         성적수정Button.addActionListener(new ActionListener() {
             @Override
@@ -351,7 +340,6 @@ public class Main {
             }
         });
         
-        panel.add(성적입력Button);
         panel.add(성적수정Button);
 
         return panel;
