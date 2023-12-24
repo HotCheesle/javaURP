@@ -62,9 +62,6 @@ public class Main {
             }
         });
 
-        
-        
-        // 회원가입 버튼의 ActionListener
         signUpButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -77,9 +74,9 @@ public class Main {
         loginFrame.add(pwLabel);
         loginFrame.add(pwField);
         loginFrame.add(loginButton);
-        loginFrame.add(signUpButton);  // 회원가입 버튼 추가
-        loginFrame.add(new JLabel()); // 빈 라벨
-        loginFrame.add(new JLabel()); // 빈 라벨
+        loginFrame.add(signUpButton);
+        loginFrame.add(new JLabel()); 
+        loginFrame.add(new JLabel()); 
 
         loginFrame.setVisible(true);
     }
@@ -112,7 +109,6 @@ public class Main {
         signUpButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // 회원가입 버튼이 클릭되었을 때의 로직
                 String id = idField.getText();
                 char[] pwChars = pwField.getPassword();
                 String password = new String(pwChars);
@@ -155,13 +151,6 @@ public class Main {
                 		}
                 	}
                 } catch (Exception ex) {System.out.println("익셉션");}
-
-                // 테스트를 위해 입력된 정보를 콘솔에 출력
-                //System.out.println("ID: " + id);
-                //System.out.println("Password: " + password);
-                //System.out.println("이름: " + name);
-                //System.out.println("학과: " + selectedDepartment);
-                //System.out.println("생일: " + birthday);
             }
         });
 
@@ -175,22 +164,11 @@ public class Main {
         signUpFrame.add(departmentComboBox);
         signUpFrame.add(birthdayLabel);
         signUpFrame.add(birthdayField);
-        signUpFrame.add(new JLabel()); // 빈 라벨
+        signUpFrame.add(new JLabel());
         signUpFrame.add(signUpButton);
 
         signUpFrame.setVisible(true);
     }
-
-    
-/*    private static boolean isProfessor(String id, String password) {
-        // 교수 계정 확인 로직을 여기에 추가
-        return id.equals("p") && password.equals("p");
-    }
-
-    private static boolean isStudent(String id, String password) {
-        // 학생 계정 확인 로직을 여기에 추가
-        return id.equals("s") && password.equals("s");
-    } */
 
     private static void ProfessorMain() {
         JFrame professorFrame = new JFrame("교수 페이지");
