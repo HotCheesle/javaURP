@@ -298,25 +298,25 @@ public class Main {
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout());
 
-        JButton 수업생성Button = new JButton("수업 생성");
-        JButton 수업삭제Button = new JButton("수업 삭제");
+        JButton CreateClassButton = new JButton("수업 생성");
+        JButton EditClassButton = new JButton("수업 수정");
 
-        수업생성Button.addActionListener(new ActionListener() {
+        CreateClassButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 createProfClassMakePage();
             }
         });
         
-        수업삭제Button.addActionListener(new ActionListener() {
+        EditClassButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 createProfClassDeletePage();
             }
         });
         
-        panel.add(수업생성Button);
-        panel.add(수업삭제Button);
+        panel.add(CreateClassButton);
+        panel.add(EditClassButton);
 
         return panel;
     }
@@ -360,34 +360,34 @@ public class Main {
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout());
 
-        JButton 시간표조회Button = new JButton("시간표 조회");
-        JButton 수강신청Button = new JButton("수강 신청");
-        JButton 수강취소Button = new JButton("수강 취소");
+        JButton TimeTableButton = new JButton("시간표 조회");
+        JButton RegisterClassButton = new JButton("수강 신청");
+        JButton ClassCancelButton = new JButton("수강 취소");
 
-        시간표조회Button.addActionListener(new ActionListener() {
+        TimeTableButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
             	createStudentTimeTablePage();
             }
         });
         
-        수강신청Button.addActionListener(new ActionListener() {
+        RegisterClassButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
             	createStudentClassRegisterPage();
             }
         });
         
-        수강취소Button.addActionListener(new ActionListener() {
+        ClassCancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
             	createStudentClassCancelPage();
             }
         });
         
-        panel.add(시간표조회Button);
-        panel.add(수강신청Button);
-        panel.add(수강취소Button);
+        panel.add(TimeTableButton);
+        panel.add(RegisterClassButton);
+        panel.add(ClassCancelButton);
 
         return panel;
     }
