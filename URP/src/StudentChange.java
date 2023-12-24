@@ -17,7 +17,7 @@ public class StudentChange extends JFrame {
 
     public StudentChange(int currentUserId) {
         super("정보 변경 페이지");
-        JFrame frm = this; // 액션리스너 내부에서 사용하기 위함
+        JFrame frm = this;
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(400, 400);
         setLayout(new BorderLayout());
@@ -53,7 +53,6 @@ public class StudentChange extends JFrame {
             }
         });
 
-        // 패널 생성 및 컴포넌트 추가
         JPanel panel = new JPanel(new GridLayout(5, 2));
         panel.add(new JLabel("이름:"));
         panel.add(nameField);
@@ -63,7 +62,7 @@ public class StudentChange extends JFrame {
         panel.add(passwordField);
         panel.add(new JLabel("생년월일:"));
         panel.add(birthdateField);
-        panel.add(new JLabel()); // 빈 라벨
+        panel.add(new JLabel());
         panel.add(updateButton);
 
         add(panel, BorderLayout.CENTER);
@@ -71,7 +70,6 @@ public class StudentChange extends JFrame {
         setVisible(true);
     }
 
-    // 유효성 검사를 통해 데이터 형식 확인
     private boolean isValidData() {
         String name = nameField.getText();
         String password = passwordField.getText();

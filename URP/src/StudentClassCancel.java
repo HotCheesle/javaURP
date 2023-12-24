@@ -21,10 +21,8 @@ public class StudentClassCancel {
         cancelFrame.setSize(400, 300);
         cancelFrame.setLayout(new BorderLayout());
 
-        // 현재 수강 중인 과목 리스트를 가져옴
         List<String> currentClasses = getCurrentClasses();
 
-        // 리스트를 보여주기 위한 JList
         JList<String> classList = new JList<>(currentClasses.toArray(new String[0]));
         JScrollPane scrollPane = new JScrollPane(classList);
 
@@ -33,7 +31,6 @@ public class StudentClassCancel {
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // 선택된 과목 코드를 가져옴
                 String selectedClass = classList.getSelectedValue();
                 if (selectedClass != null) {
                     String[] parts = selectedClass.split(" - ");
@@ -41,7 +38,6 @@ public class StudentClassCancel {
                         int classId = Integer.parseInt(parts[0]);
                         String result = DAO.CancelClass(currentUserId, classId);
                         JOptionPane.showMessageDialog(cancelFrame, result);
-                        // 취소 후 리스트 갱신
                         currentClasses.clear();
                         currentClasses.addAll(getCurrentClasses());
                         classList.setListData(currentClasses.toArray(new String[0]));

@@ -34,10 +34,8 @@ public class StudentClassRegister {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
 
-        // 과목 리스트 가져오기
         List<String> classList = getClassList();
 
-        // 리스트를 JList에 추가
         JList<String> list = new JList<>(classList.toArray(new String[0]));
 
         JScrollPane scrollPane = new JScrollPane(list);
@@ -51,7 +49,6 @@ public class StudentClassRegister {
         List<String> classList = new ArrayList<>();
 
         try {
-            // 과목 리스트 가져오기
             ResultSet rs = DAO.GetClassList();
             while (rs.next()) {
                 int cid = rs.getInt("CID");

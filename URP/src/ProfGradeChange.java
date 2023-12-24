@@ -28,22 +28,18 @@ public class ProfGradeChange {
         frame.setSize(500, 400);
         frame.setLayout(new BorderLayout());
 
-        // 강의 선택 콤보 박스
         classComboBox = new JComboBox<>();
         updateClassComboBox();
 
-        // 학생 성적 표
         tableModel = new DefaultTableModel();
         studentTable = new JTable(tableModel);
         JScrollPane tableScrollPane = new JScrollPane(studentTable);
 
-        // 성적 입력 필드 및 버튼
         JPanel scorePanel = new JPanel();
         JLabel scoreLabel = new JLabel("성적:");
         scoreField = new JTextField(5);
         updateButton = new JButton("성적 업데이트");
 
-        // 성적 업데이트 버튼 리스너
         updateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -55,16 +51,13 @@ public class ProfGradeChange {
         scorePanel.add(scoreField);
         scorePanel.add(updateButton);
 
-        // 프레임에 컴포넌트 추가
         frame.add(classComboBox, BorderLayout.NORTH);
         frame.add(tableScrollPane, BorderLayout.CENTER);
         frame.add(scorePanel, BorderLayout.SOUTH);
 
-        // 프레임 표시
         frame.setVisible(true);
     }
 
-    // 강의 선택 콤보 박스 업데이트
     private void updateClassComboBox() {
         classComboBox.removeAllItems();
         ResultSet classList = DAO.GetProfessorClass(profId);
@@ -77,7 +70,6 @@ public class ProfGradeChange {
             e.printStackTrace();
         }
 
-        // 콤보 박스 아이템 선택 리스너
         classComboBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -87,7 +79,6 @@ public class ProfGradeChange {
         });
     }
 
-    // 학생 성적 표 업데이트
     private void updateStudentTable(int classId) {
         tableModel.setColumnCount(0);
         tableModel.setRowCount(0);
@@ -111,7 +102,6 @@ public class ProfGradeChange {
         }
     }
 
-    // 성적 업데이트 메서드
     private void updateStudentGrade() {
         int classId = (int) classComboBox.getSelectedItem();
         int selectedRow = studentTable.getSelectedRow();
