@@ -10,7 +10,7 @@ public class Main {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-        	LoginPage();
+            LoginPage();
         });
         
         try {
@@ -75,8 +75,8 @@ public class Main {
         loginFrame.add(pwField);
         loginFrame.add(loginButton);
         loginFrame.add(signUpButton);
-        loginFrame.add(new JLabel());
-        loginFrame.add(new JLabel());
+        loginFrame.add(new JLabel()); 
+        loginFrame.add(new JLabel()); 
 
         loginFrame.setVisible(true);
     }
@@ -192,6 +192,7 @@ public class Main {
         studentFrame.setLayout(new BorderLayout());
         
         JTabbedPane tabbedPane = new JTabbedPane();
+
         tabbedPane.addTab("학적관리", createStudentAcademicPanel()); //학적관리
         tabbedPane.addTab("수업관리", createStudentClassPanel()); //수업관리
         tabbedPane.addTab("성적관리", createStudentGradePanel()); //성적관리
@@ -227,7 +228,6 @@ public class Main {
     	StudentGrade StudentGradePage = new StudentGrade(currentUserId);
     }
     
-  
     private static void createProfGradeChangePage() {
     	ProfGradeChange ProfGradeChangePage = new ProfGradeChange(currentUserId);
     }
@@ -236,12 +236,12 @@ public class Main {
     	ProfClassMake ProfClassMakePage = new ProfClassMake(currentUserId);
     }
     
-    private static void createProfClassDeletePage() {
-    	//ProfClassDelete ProfClassDeletePage = new ProfClassDelete();
+    private static void createProfClassEditPage() {
+    	ProfClassEdit ProfClassEditPage = new ProfClassEdit(currentUserId);
     }
     
     
-    private static JPanel createStudentAcademicPanel() {
+    private static JPanel createStudentAcademicPanel() { // 학생의 학적관리 패널
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout());
 
@@ -267,8 +267,7 @@ public class Main {
 
         return panel;
     }
-
-    private static JPanel createStudentClassPanel() {
+    private static JPanel createStudentClassPanel() { // 학생의 수업관리 패널
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout());
 
@@ -303,8 +302,7 @@ public class Main {
 
         return panel;
     }
-    
-    private static JPanel createStudentGradePanel() {
+    private static JPanel createStudentGradePanel() { // 학생의 성적관리 패널
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout());
 
@@ -321,36 +319,35 @@ public class Main {
 
         return panel;
     }
-
     
-    private static JPanel createProfClassPanel() {
+    private static JPanel createProfClassPanel() { // 교수의 수업관리 패널
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout());
 
-        JButton ProfCreateClassButton = new JButton("수업 생성");
-        JButton ProfClassDeleteButton = new JButton("수업 수정");
+        JButton ProfClassMakeButton = new JButton("수업 생성");
+        JButton ProfClassEditButton = new JButton("수업 수정");
 
-        ProfCreateClassButton.addActionListener(new ActionListener() {
+        ProfClassMakeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 createProfClassMakePage();
             }
         });
         
-        ProfClassDeleteButton.addActionListener(new ActionListener() {
+        ProfClassEditButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                createProfClassDeletePage();
+            	createProfClassEditPage();
             }
         });
         
-        panel.add(ProfCreateClassButton);
-        panel.add(ProfClassDeleteButton);
+        panel.add(ProfClassMakeButton);
+        panel.add(ProfClassEditButton);
 
         return panel;
     }
 
-    private static JPanel createProfGradePanel() {
+    private static JPanel createProfGradePanel() { // 교수의 성적입력/수정 패널
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout());
         
