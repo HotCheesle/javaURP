@@ -3,89 +3,95 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
-public class StudentClassRegister extends JFrame {
+public class StudentClassRegister {
 
-	public StudentClassRegister(int currentUserId) {
-		// TODO Auto-generated constructor stub
-	}
-/*
-    private String studentId;
-    private JList<String> classList;
-    private JTextField cidField;
+    private static int currentUserId;
 
-    public StudentClassRegister(String studentId) {
-        super("수강 신청 페이지");
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(400, 300);
-        setLayout(new BorderLayout());
-
-        this.studentId = studentId;
-        displayClassList();
-
-        setVisible(true);
+    public StudentClassRegister(int studentId) {
+        currentUserId = studentId;
+        createClassRegisterPage();
     }
 
-    private void displayClassList() {
-        DefaultListModel<String> listModel = new DefaultListModel<>();
-        classList = new JList<>(listModel);
+    private static void createClassRegisterPage() {
+        JFrame registerFrame = new JFrame("수강 신청");
+        registerFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        registerFrame.setSize(500, 300);
+        registerFrame.setLayout(new BorderLayout());
+
+        JPanel classListPanel = createClassListPanel();
+        JPanel registerPanel = createRegisterPanel();
+
+        registerFrame.add(classListPanel, BorderLayout.CENTER);
+        registerFrame.add(registerPanel, BorderLayout.SOUTH);
+
+        registerFrame.setVisible(true);
+    }
+
+    private static JPanel createClassListPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+
+        // 과목 리스트 가져오기
+        List<String> classList = getClassList();
+
+        // 리스트를 JList에 추가
+        JList<String> list = new JList<>(classList.toArray(new String[0]));
+
+        JScrollPane scrollPane = new JScrollPane(list);
+
+        panel.add(scrollPane, BorderLayout.CENTER);
+
+        return panel;
+    }
+
+    private static List<String> getClassList() {
+        List<String> classList = new ArrayList<>();
 
         try {
-            ResultSet resultSet = DAO.getClassListAndRegisterCourse(studentId, "");
-
-            while (resultSet.next()) {
-                String courseId = resultSet.getString("CID");
-                String className = resultSet.getString("classname");
-                listModel.addElement(courseId + " - " + className);
+            // 과목 리스트 가져오기
+            ResultSet rs = DAO.GetClassList();
+            while (rs.next()) {
+                int cid = rs.getInt("CID");
+                String className = rs.getString("classname");
+                String classInfo = "CID: " + cid + " - " + className;
+                classList.add(classInfo);
             }
-
-            resultSet.close();
-
-            JScrollPane scrollPane = new JScrollPane(classList);
-            add(scrollPane, BorderLayout.CENTER);
-
-            cidField = new JTextField();
-            JButton registerButton = new JButton("수강 신청");
-            registerButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    registerClass();
-                }
-            });
-
-            JPanel panel = new JPanel(new GridLayout(2, 2));
-            panel.add(new JLabel("강의 번호:"));
-            panel.add(cidField);
-            panel.add(new JLabel());
-            panel.add(registerButton);
-
-            add(panel, BorderLayout.SOUTH);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        return classList;
     }
 
-    private void registerClass() {
-        String selectedValue = classList.getSelectedValue();
-        if (selectedValue == null) {
-            JOptionPane.showMessageDialog(this, "수강할 강의를 선택해주세요.");
-            return;
-        }
 
-        String[] parts = selectedValue.split(" - ");
-        String courseId = parts[0];
+    private static JPanel createRegisterPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new FlowLayout());
 
-        ResultSet resultSet = DAO.getClassListAndRegisterCourse(studentId, courseId);
+        JLabel cidLabel = new JLabel("수강할 과목의 CID를 입력하세요:");
+        JTextField cidField = new JTextField(10);
 
-        // 결과 처리 (생략 가능)
-
-        JOptionPane.showMessageDialog(this, "수강 신청이 완료되었습니다.");
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new StudentClassRegister("123");
+        JButton registerButton = new JButton("수강 신청");
+        registerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    int cid = Integer.parseInt(cidField.getText());
+                    DAO.RegisterClass(currentUserId, cid);
+                    JOptionPane.showMessageDialog(null, "수강 신청이 완료되었습니다.");
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(null, "올바른 숫자를 입력하세요.");
+                }
+            }
         });
-    }*/
+
+        panel.add(cidLabel);
+        panel.add(cidField);
+        panel.add(registerButton);
+
+        return panel;
+    }
 }

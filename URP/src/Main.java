@@ -18,7 +18,7 @@ public class Main {
         });
         
         try {
-    		DAO.SetConnection("urp", "root", "ssho000805!");//여기에 비밀번호와 데이터베이스 이름 입력
+    		DAO.SetConnection("urp", "root", "root");//여기에 비밀번호와 데이터베이스 이름 입력
     	}
     	catch(Exception e){}
     }
@@ -236,7 +236,7 @@ public class Main {
     //여기서부터는 버튼마다의 각각 페이지 호출 객체 생성
     
     private static void createStudentInquiryPage() {
-        //StudentInquiry StudentInquiryPage = new StudentInquiry(currentUserId);
+        StudentInquiry StudentInquiryPage = new StudentInquiry(currentUserId);
     }
     
     private static void createStudentChangePage() {
@@ -244,19 +244,19 @@ public class Main {
     }
     
     private static void createStudentTimeTablePage() {
-        //StudentTimeTable StudentTimeTablePage = new StudentTimeTable(currentUserId);
+        StudentTimeTable StudentTimeTablePage = new StudentTimeTable(currentUserId);
     }
     
     private static void createStudentClassRegisterPage() {
-        //StudentClassRegister StudentClassRegisterPage = new StudentClassRegister(currentUserId);
+        StudentClassRegister StudentClassRegisterPage = new StudentClassRegister(currentUserId);
     }
     
     private static void createStudentClassCancelPage() {
-        //StudentClassCancel StudentClassCancelPage = new StudentClassCancel(currentUserId);
+        StudentClassCancel StudentClassCancelPage = new StudentClassCancel(currentUserId);
     }
     
     private static void createStudentGradePage() {
-    	//StudentGrade StudentGradePage = new StudentGrade(currentUserId);
+    	StudentGrade StudentGradePage = new StudentGrade(currentUserId);
     }
     
     private static void createProfGradeInputPage() {

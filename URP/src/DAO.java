@@ -196,6 +196,84 @@ public class DAO {
 		}
 		catch(Exception e){}
 	}
+	public static ResultSet GetClassList() {
+	    try {
+	        if (conn != null) {
+	            Statement stmt = conn.createStatement();
+	            String proc = "CALL GetClassList()";
+	            return stmt.executeQuery(proc);
+	        } else {
+	            return null;
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return null;
+	    }
+	}
+
+	public static void RegisterClass(int sid, int cid) {
+	    try {
+	        if (conn != null) {
+	            CallableStatement cstmt = conn.prepareCall("{call RegisterClass(?, ?)}");
+	            cstmt.setInt(1, sid);
+	            cstmt.setInt(2, cid);
+	            cstmt.executeUpdate();
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
+	public static String CancelClass(int studentId, int classId) {
+	    try {
+	        if (conn != null) {
+	            CallableStatement cstmt = conn.prepareCall("{call CancelClass(?, ?)}");
+	            cstmt.setInt(1, studentId);
+	            cstmt.setInt(2, classId);
+
+	            cstmt.execute();
+
+	            ResultSet rs = cstmt.getResultSet();
+	            if (rs.next()) {
+	                return rs.getString("Status");
+	            }
+	        }
+	        return "Error";
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return "Error";
+	    }
+	}
+	public static ResultSet GetStudentCurrentClasses(int studentId) {
+	    try {
+	        if (conn != null) {
+	            CallableStatement cstmt = conn.prepareCall("{call GetStudentCurrentClasses(?)}");
+	            cstmt.setInt(1, studentId);
+
+	            cstmt.execute();
+	            return cstmt.getResultSet();
+	        }
+	        return null;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return null;
+	    }
+	}
+	public static ResultSet GetStudentGrades(int studentId) {
+	    try {
+	        if (conn != null) {
+	            CallableStatement cstmt = conn.prepareCall("{call GetStudentGrades(?)}");
+	            cstmt.setInt(1, studentId);
+
+	            cstmt.execute();
+	            return cstmt.getResultSet();
+	        }
+	        return null;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return null;
+	    }
+	}
+	
 }
 
 
