@@ -221,7 +221,6 @@ public class DAO {
 				String pa = "(" + cid + ",'" + name + "','" + room + "','" + start + "','" + end
 						+ "','" + day + "'," + grade + ")";
 				proc += pa;
-				System.out.println(proc);
 				stmt.executeQuery(proc);
 			}
 		}
@@ -234,7 +233,6 @@ public class DAO {
 				String proc = "call DeleteClass";
 				String pa = "(" + cid + ")";
 				proc += pa;
-				System.out.println(proc);
 				stmt.executeQuery(proc);
 			}
 			else{}

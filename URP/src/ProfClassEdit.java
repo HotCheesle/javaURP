@@ -128,7 +128,7 @@ public class ProfClassEdit extends JFrame {
     private void refreshList(DefaultTableModel model, int pid) {
     	try
 		{
-			model.getDataVector().removeAllElements();
+			model.setRowCount(0);
 			ResultSet rsc = DAO.GetProfessorClass(pid);
 			String[] row = new String[7];
 			while (rsc.next()) {

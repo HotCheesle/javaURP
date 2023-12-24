@@ -30,10 +30,10 @@ public class StudentInquiry extends JFrame {
 
             if (resultSet != null && resultSet.next()) {
                 String name = resultSet.getString("sname");
-                String department = resultSet.getString("departmentid");
+                String department = resultSet.getString("departmentname");
                 String enrollmentStatus = resultSet.getString("status");
                 String birthday = resultSet.getString("birthdate");
-                String advisor = resultSet.getString("advisorid");
+                String advisor = resultSet.getString("pname");
                 int grade = resultSet.getInt("grade");
 
                 JLabel nameLabel = new JLabel("이름: " + name);
