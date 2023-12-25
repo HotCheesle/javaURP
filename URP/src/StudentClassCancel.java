@@ -37,7 +37,7 @@ public class StudentClassCancel {
                     if (parts.length == 2) {
                         int classId = Integer.parseInt(parts[0]);
                         String result = DAO.CancelClass(currentUserId, classId);
-                        JOptionPane.showMessageDialog(cancelFrame, result);
+                        JOptionPane.showMessageDialog(null, "수강 취소가 완료되었습니다.");
                         currentClasses.clear();
                         currentClasses.addAll(getCurrentClasses());
                         classList.setListData(currentClasses.toArray(new String[0]));
