@@ -109,7 +109,8 @@ public class ProfGradeChange {
     }
 
     private void updateStudentGrade() {
-        int classId = (int) classComboBox.getSelectedItem();
+    	int selectedidx = classComboBox.getSelectedIndex();
+        int classId = classIDComboBox.getItemAt(selectedidx);
         int selectedRow = studentTable.getSelectedRow();
         if (selectedRow != -1) {
             int studentId = (int) tableModel.getValueAt(selectedRow, 0);
