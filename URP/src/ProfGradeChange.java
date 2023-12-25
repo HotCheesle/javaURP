@@ -10,6 +10,7 @@ import java.sql.SQLException;
 public class ProfGradeChange {
     private JFrame frame;
     private JComboBox<String> classComboBox;
+    private JComboBox<Integer> classIDComboBox;
     private JTable studentTable;
     private DefaultTableModel tableModel;
     private JTextField scoreField;
@@ -29,6 +30,8 @@ public class ProfGradeChange {
         frame.setLayout(new BorderLayout());
 
         classComboBox = new JComboBox<>();
+        classIDComboBox = new JComboBox<>();
+        
         updateClassComboBox();
 
         tableModel = new DefaultTableModel();
@@ -64,7 +67,9 @@ public class ProfGradeChange {
         try {
             while (classList.next()) {
                 String classname = classList.getString("classname");
+                int classid = classList.getInt("CID");
                 classComboBox.addItem(classname);
+                classIDComboBox.addItem(classid);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -73,7 +78,8 @@ public class ProfGradeChange {
         classComboBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int selectedClassId = (int) classComboBox.getSelectedItem();
+            	int selectedidx = classComboBox.getSelectedIndex();
+                int selectedClassId = classIDComboBox.getItemAt(selectedidx);
                 updateStudentTable(selectedClassId);
             }
         });
