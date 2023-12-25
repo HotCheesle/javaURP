@@ -9,7 +9,7 @@ import java.sql.SQLException;
 
 public class ProfGradeChange {
     private JFrame frame;
-    private JComboBox<Integer> classComboBox;
+    private JComboBox<String> classComboBox;
     private JTable studentTable;
     private DefaultTableModel tableModel;
     private JTextField scoreField;
@@ -63,8 +63,8 @@ public class ProfGradeChange {
         ResultSet classList = DAO.GetProfessorClass(profId);
         try {
             while (classList.next()) {
-                int classId = classList.getInt("CID");
-                classComboBox.addItem(classId);
+                String classname = classList.getString("classname");
+                classComboBox.addItem(classname);
             }
         } catch (SQLException e) {
             e.printStackTrace();
