@@ -74,11 +74,18 @@ public class StudentChange extends JFrame {
         String name = nameField.getText();
         String password = passwordField.getText();
         String id = idField.getText();
+        String birthdate = birthdateField.getText();
 
-        if (name.isEmpty() || password.isEmpty() || id.isEmpty()) {
+        if (name.isEmpty() || password.isEmpty() || id.isEmpty() || birthdate.isEmpty()) {
             JOptionPane.showMessageDialog(this, "빈 칸을 모두 채워야합니다.");
             return false;
         }
+        if (!birthdate.matches("\\d{4}-\\d{2}-\\d{2}")) {
+            JOptionPane.showMessageDialog(this, "생년월일은 YYYY-MM-DD 형식이어야 합니다.");
+            return false;
+        }
+
         return true;
     }
+    
 }
