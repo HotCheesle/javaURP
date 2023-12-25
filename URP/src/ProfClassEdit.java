@@ -21,7 +21,7 @@ public class ProfClassEdit extends JFrame {
     String[] dayoftheweek = {"월요일", "화요일", "수요일", "목요일", "금요일"};
 
     public ProfClassEdit(int currentUserId) {
-        super("수업 삭제 페이지");
+        super("수업 수정 페이지");
         JFrame frm = this;
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(700, 400);
