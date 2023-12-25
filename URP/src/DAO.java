@@ -286,10 +286,6 @@ public class DAO {
 
 	            cstmt.execute();
 
-	            ResultSet rs = cstmt.getResultSet();
-	            if (rs.next()) {
-	                return rs.getString("Status");
-	            }
 	        }
 	        return "Error";
 	    } catch (Exception e) {
